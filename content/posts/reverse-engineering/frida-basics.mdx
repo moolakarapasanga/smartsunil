@@ -1,0 +1,38 @@
+---
+title: "Getting Started With Frida"
+description: "An introduction to runtime instrumentation for authorized application research."
+date: "2026-08-19"
+category: "reverse-engineering"
+tags:
+  - Frida
+  - Reverse Engineering
+  - Instrumentation
+author: "Security Research"
+published: true
+---
+
+# Getting Started With Frida
+
+Frida provides runtime instrumentation capabilities that are useful during authorized application research.
+
+<Callout type="info">
+Use instrumentation only against software you own or are explicitly authorized to assess.
+</Callout>
+
+## Why Runtime Instrumentation?
+
+Static analysis tells you what code exists. Runtime instrumentation helps answer what code actually executes under specific conditions.
+
+## Workflow
+
+A typical research workflow is:
+
+1. Identify the relevant process.
+2. Understand the target function.
+3. Instrument a narrow point.
+4. Observe behavior.
+5. Validate the hypothesis.
+
+## Conclusion
+
+The value of Frida is not the hook itself. It is the ability to test assumptions about runtime behavior.

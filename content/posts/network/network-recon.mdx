@@ -1,0 +1,32 @@
+---
+title: "Network Reconnaissance Methodology"
+description: "A structured approach to mapping an authorized network assessment."
+date: "2026-08-15"
+category: "network"
+tags:
+  - Network Security
+  - Reconnaissance
+  - Assessment
+author: "Security Research"
+published: true
+---
+
+# Network Reconnaissance Methodology
+
+Network reconnaissance should establish scope before collecting technical detail.
+
+## Scope
+
+Document approved ranges, systems, exclusions and testing windows.
+
+## Discovery
+
+Use controlled discovery to identify reachable hosts and exposed services.
+
+<CommandBlock>
+nmap -sV --top-ports 1000 192.0.2.0/24
+</CommandBlock>
+
+## Conclusion
+
+Good reconnaissance reduces noise and gives the rest of the assessment a defensible technical foundation.

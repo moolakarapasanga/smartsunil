@@ -1,0 +1,36 @@
+---
+title: "Understanding Prompt Injection"
+description: "A security-oriented introduction to prompt injection in LLM applications."
+date: "2026-08-17"
+category: "ai-security"
+tags:
+  - AI Security
+  - LLM
+  - Prompt Injection
+author: "Security Research"
+published: true
+---
+
+# Understanding Prompt Injection
+
+Prompt injection occurs when untrusted input influences an LLM in ways that conflict with the application's intended instructions or security boundaries.
+
+<Callout type="warning">
+AI security testing should be performed only against systems you are authorized to assess.
+</Callout>
+
+## Threat Model
+
+Separate trusted instructions, user-controlled content, retrieved data and tool outputs.
+
+## Testing
+
+Focus on whether untrusted content can alter model behavior, expose protected context, or cause unsafe tool use.
+
+## Mitigation
+
+Use strong application-level authorization, tool permission boundaries, input provenance, output validation and least privilege. Do not assume that a system prompt is an access-control boundary.
+
+## Conclusion
+
+LLM security is application security with an unreliable natural-language component in the middle. Treat model output as untrusted data.

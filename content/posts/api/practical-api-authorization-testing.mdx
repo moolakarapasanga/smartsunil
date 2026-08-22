@@ -1,0 +1,37 @@
+---
+title: "Practical API Authorization Testing"
+description: "A structured approach to testing object and function authorization in APIs."
+date: "2026-08-18"
+category: "api"
+tags:
+  - API Security
+  - Authorization
+  - IDOR
+author: "Security Research"
+published: true
+---
+
+# Practical API Authorization Testing
+
+Authorization testing asks whether the server correctly enforces who can access an object or perform an action.
+
+## Object-Level Authorization
+
+Create a test matrix covering multiple authenticated identities and object identifiers.
+
+## Function-Level Authorization
+
+Test whether privileged endpoints enforce the expected server-side role checks.
+
+<HttpResponse>
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+</HttpResponse>
+
+## Mitigation
+
+Authorization decisions should be enforced server-side for every sensitive operation. Client-side hiding is not authorization.
+
+## Conclusion
+
+A good authorization test is systematic, identity-aware and focused on server-side decisions.

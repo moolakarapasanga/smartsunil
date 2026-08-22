@@ -1,0 +1,32 @@
+---
+title: "Analyzing iOS Certificate Pinning"
+description: "A structured approach to understanding TLS trust decisions in iOS applications."
+date: "2026-08-21"
+category: "ios"
+tags:
+  - iOS
+  - TLS
+  - Mobile Security
+author: "Security Research"
+published: true
+---
+
+# Analyzing iOS Certificate Pinning
+
+iOS applications can implement additional trust controls beyond the platform defaults.
+
+<Callout type="warning">
+Use these techniques only in applications you are authorized to test.
+</Callout>
+
+## What to Identify
+
+Determine whether the application uses URL loading APIs, a third-party networking library, or custom trust evaluation.
+
+## Validation
+
+Combine static inspection with controlled dynamic testing. The goal is to understand the trust decision rather than blindly bypassing a control.
+
+## Conclusion
+
+A good mobile assessment documents the trust path, the enforcement point and the security impact.

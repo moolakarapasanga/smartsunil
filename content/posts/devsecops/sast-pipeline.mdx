@@ -1,0 +1,42 @@
+---
+title: "Building a Practical SAST Pipeline"
+description: "How to structure static analysis in a development pipeline."
+date: "2026-08-14"
+category: "devsecops"
+tags:
+  - SAST
+  - DevSecOps
+  - CI/CD
+author: "Security Research"
+published: true
+---
+
+# Building a Practical SAST Pipeline
+
+A useful SAST pipeline should provide actionable feedback without making developers ignore every alert.
+
+## Pipeline
+
+A practical flow is:
+
+```text
+Pull Request
+    ↓
+SAST
+    ↓
+Secret Scan
+    ↓
+Dependency Scan
+    ↓
+Triage
+    ↓
+Developer Feedback
+```
+
+## Triage
+
+Prioritize findings using exploitability, reachability, confidence and business impact.
+
+## Conclusion
+
+Security automation is valuable only when teams can understand and act on its results.

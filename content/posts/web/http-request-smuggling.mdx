@@ -1,0 +1,43 @@
+---
+title: "Understanding HTTP Request Smuggling"
+description: "A methodology for analyzing parser inconsistencies between HTTP components."
+date: "2026-08-20"
+category: "web"
+tags:
+  - Web Security
+  - HTTP
+  - Request Smuggling
+author: "Security Research"
+published: true
+---
+
+# Understanding HTTP Request Smuggling
+
+HTTP request smuggling can occur when front-end and back-end components disagree about request boundaries.
+
+<Callout type="danger">
+Only test request-smuggling behavior against systems where you have explicit authorization.
+</Callout>
+
+## Technical Background
+
+Common classes include CL.TE and TE.CL, where different components prioritize different message framing signals.
+
+## Methodology
+
+Map the proxy chain first. Then determine which parser handles each stage and compare how the components interpret ambiguous requests.
+
+<HttpRequest>
+POST / HTTP/1.1
+Host: example.test
+Content-Length: 4
+Transfer-Encoding: chunked
+</HttpRequest>
+
+## Mitigation
+
+Standardize HTTP parsing behavior, remove ambiguous framing, keep reverse proxies and application servers patched, and monitor for anomalous traffic patterns.
+
+## Conclusion
+
+The vulnerability is fundamentally about disagreement. Finding the disagreement is usually more important than memorizing payloads.

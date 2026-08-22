@@ -1,0 +1,43 @@
+---
+title: "Understanding Android SSL Pinning"
+description: "A practical introduction to analyzing certificate pinning in Android applications."
+date: "2026-08-22"
+category: "android"
+tags:
+  - Android
+  - SSL Pinning
+  - Mobile Security
+author: "Security Research"
+featured: true
+published: true
+---
+
+# Understanding Android SSL Pinning
+
+Certificate pinning is a client-side control intended to restrict which certificates or public keys an application trusts.
+
+<Callout type="warning">
+Only perform security testing against applications and systems you are authorized to assess.
+</Callout>
+
+## Introduction
+
+During an authorized mobile assessment, the first step is to understand how the application establishes TLS connections and whether it adds pinning on top of normal certificate validation.
+
+## Testing Methodology
+
+Start by identifying the networking stack, certificate configuration and trust-management code.
+
+```bash
+adb shell pm list packages | grep example
+```
+
+Then inspect the application statically and validate behavior dynamically in an authorized test environment.
+
+## Mitigation
+
+Pinning should be implemented carefully and maintained through a controlled certificate rotation process. It should complement, not replace, proper server-side authentication and authorization.
+
+## Conclusion
+
+The useful question is not simply whether pinning exists. The assessment should determine where trust is established, how it is enforced, and whether the overall application security model remains sound.
