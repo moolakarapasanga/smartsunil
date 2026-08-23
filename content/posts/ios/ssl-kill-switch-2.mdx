@@ -1,0 +1,105 @@
+---
+title: "SSL Kill Switch 2"
+description: "Bypass SSL Pinning iOS Applications"
+date: "2026-06-21"
+category: "ios"
+tags:
+  - iOS
+  - TLS
+  - Mobile Security
+author: "Security Research"
+published: true
+---
+
+## Basic setup
+
+On a jailbroken test device:
+```bash
+iPhone
+  |
+  +-- Jailbreak
+  |
+  +-- Cydia/Sileo/Zebra
+  |
+  +-- SSL Kill Switch 2
+  |
+  +-- Burp CA certificate
+  |
+  +-- Wi-Fi proxy
+  |
+  +-- Burp Suite
+  ```
+## Configure Burp
+
+  Configure Burp -> Proxy -> Proxy Settings -> Proxy listener -> 0.0.0.0:8080
+  Make sure your PC and iPhone can commnunicate
+  Find you PC's LAN IP 
+  ipconfig 
+  find the ip address like this: 192.168.1.10
+
+## Configure iPhone proxy 
+  On the iPhone -> Settings -> Wi-FI -> Your Wifi network -> Configure Proxy -> Manual
+  Set:
+  Server : 192.168.1.10
+  Port: 8080
+
+##  Install Burp CA 
+  Go to the browser in the iPhone 
+  Hit the http://burp Download the CA certificate 
+
+  Settings -> General -> VPN & Device Management 
+  After installing it, there is an additional important step:
+  Settings -> General -> About -> Certificate Trust Settings -> Enable full trust for the Burp CA 
+
+## Install SSL Kill Switch 2
+Install the compatible package for your jailbroken iOS environment.
+After installation, reboot/respring if required.
+Then launch the target application.
+If the application uses networking APIs covered by the tweak:
+App -> TLS validation -> SSL Kill Switch -> validation bypass -> Burp
+Now, You should start seeing HTTPS requests in Burp.
+
+
+You should start seeing HTTPS requests in Burp.
+
+<Callout type="warning">
+Use these techniques only in applications you are authorized to test.
+</Callout>
+
+## Use Super Proxy 
+
+Try using this VPN app and configure it on the iPhone. It might work.
+
+## Why SSL Kill Switch doesn't bypass everything ?
+If an application still doesn't appear in Burp after SSL Kill Switch is installed, don't immediately conclude that your proxy configuration is broken.
+The application might be using:
+```bash
+NSURLSession
+CFNetwork
+SecureTransport
+```
+which may be covered,
+but it could instead use:
+```bash
+BoringSSL
+OpenSSL
+custom TLS implementation
+Network.framework
+native C/C++
+custom certificate validation
+certificate/public-key pinning
+```
+For example:
+```bash
+Swift/Objective-C
+       |
+       v
+Custom networking library
+       |
+       v
+BoringSSL
+       |
+       v
+TLS
+```
+SSL Kill Switch may not intercept the application's particular validation path.

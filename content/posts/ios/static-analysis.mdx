@@ -1,0 +1,221 @@
+---
+title: "Static Analysis IPA file"
+description: "Static Analysis IPA file using strings,"
+date: "2026-07-21"
+category: "ios"
+tags:
+  - iOS
+  - TLS
+  - Mobile Security
+author: "Security Research"
+published: true
+---
+
+## Hardcoded Credentials
+
+Search the extracted application files for hardcoded credentials, API keys, tokens, secrets, passwords, private keys, and third-party service credentials.
+
+### 1. Credentials and API Keys
+
+```bash
+rg -n -i "api[_-]?key|secret|password|passwd|pwd|token|session|auth|\
+credential|Bearer|client[_-]?id|client[_-]?secret|access[_-]?key|\
+private[_-]?key|public[_-]?key" exploded
+```
+
+Also inspect configuration files such as:
+
+```text
+.json
+.xml
+.plist
+.properties
+.yaml
+.yml
+.env
+.config
+```
+
+Pay particular attention to third-party backend integrations and embedded service credentials.
+
+### 2. Third-Party Service Configuration
+
+Search for references to commonly used cloud and backend services:
+
+```bash
+rg -n -i "firebase|google|aws|s3|azure|gcp|stripe|twilio|algolia|sentry|\
+amplitude|mixpanel" exploded
+```
+
+For iOS applications, inspect files such as:
+
+```text
+GoogleService-Info.plist
+Info.plist
+*.plist
+```
+
+These files may contain API keys, project identifiers, OAuth configuration, Firebase configuration, or other service-related information.
+
+### 3. Hidden and Debug Features
+
+Search the application binary and extracted resources for development and testing functionality:
+
+```bash
+rg -n -i "develop|developer|debug|dev[_-]?mode|test[_-]?mode|staging|\
+sandbox|fake|mock|test|internal|qa|bypass" exploded
+```
+
+Look for:
+
+```text
+Hidden debug menus
+Developer options
+Test accounts
+Staging endpoints
+Debug APIs
+Internal features
+Mock authentication
+Feature flags
+Development backdoors
+```
+
+### 4. Encryption and Decryption Logic
+
+Search for cryptographic implementations and key-handling code:
+
+```bash
+rg -n -i "AES|DES|RSA|ECIES|ChaCha|Poly1305|Blowfish|RC4|Twofish|Hmac|\
+HMAC|Cipher|getInstance|SecretKeySpec|IvParameterSpec|PBKDF2|PBEWith|\
+SecureRandom|KeyPairGenerator|KeyGenerator|KeyFactory|MessageDigest|\
+Signature|SecretKeyFactory|Mac|GCMParameterSpec|CBC|CTR|CFB|OFB|\
+NoPadding|PKCS8|X509EncodedKeySpec|KeySpec|EncodedKeySpec" exploded
+```
+
+When encryption is identified, trace:
+
+```text
+Encryption algorithm
+Encryption key
+Initialization Vector (IV)
+Salt
+Nonce
+Key derivation method
+Encryption/decryption functions
+Where the key is stored
+Where the encrypted data is stored
+```
+
+### 5. Encrypted Blobs and Decryptors
+
+Search for encrypted or encoded data together with the code responsible for decoding or decrypting it:
+
+```bash
+rg -n -i "encrypt|decrypt|decode|encode|Base64|decodeBase64|encodeToString|\
+hexString|hexToBytes|b64decode" exploded
+```
+
+If an encrypted blob is identified, locate its corresponding decryptor and determine whether the encryption key or derivation logic is also present in the application.
+
+### 6. Custom Encryption and Obfuscation
+
+Look for developers implementing their own crypto or simple obfuscation:
+
+```bash
+rg -n -i "XOR|xor|customEncrypt|customDecrypt|rot13|reverse|obfuscate|\
+deobf|shift|mask|charAt|toCharArray|StringBuilder|append|decodeBytes|\
+byteToHex|hexToBytes" exploded
+```
+
+Pay attention to:
+
+```text
+XOR-based encryption
+Hardcoded encryption keys
+Hardcoded IVs
+String manipulation
+Base64 encoding
+Hex encoding
+Character shifting
+Reversed strings
+Custom key derivation
+```
+
+### 7. TLS and Trust Configuration
+
+Search for insecure certificate and trust-management implementations:
+
+```bash
+rg -n -i "trustAll|allowAll|HostnameVerifier|verify|checkServerTrusted|\
+setDefaultHostnameVerifier|SSLSocket|SSLContext|InsecureTrustManager|\
+trustManager|TrustManager|TrustManagerFactory|acceptAllCertificates|\
+CertificatePinner" exploded
+```
+
+Review the surrounding implementation to determine whether certificate validation or hostname verification can be bypassed.
+
+### 8. Local Storage of Credentials
+
+Search for locations where sensitive information may be stored:
+
+```bash
+rg -n -i "SharedPreferences|MODE_PRIVATE|MODE_WORLD_READABLE|\
+MODE_WORLD_WRITEABLE|putString|putInt|putBoolean|commit|apply|\
+writeFile|FileOutputStream|openFileOutput|KeyStore|keyStore" exploded
+```
+
+Check whether the application stores:
+
+```text
+Access tokens
+Refresh tokens
+Session identifiers
+Passwords
+API keys
+Encryption keys
+User credentials
+Authentication data
+```
+
+### 9. High-Value Quick Search
+
+For an initial manual review, search for these terms:
+
+```text
+AES
+RSA
+HMAC
+api_key
+apikey
+secret
+password
+token
+Bearer
+credential
+private_key
+access_key
+trustAll
+SharedPreferences
+CertificatePinner
+X509EncodedKeySpec
+Cipher
+decrypt
+encrypt
+```
+
+### 10. Validation
+
+Finding a keyword alone is **not evidence of a vulnerability**. Trace the value to determine whether it is:
+
+```text
+Hardcoded
+Sensitive
+Actually used
+Accessible to an attacker
+Valid or active
+Privileged
+Environment-specific
+Recoverable at runtime
+```
+
+For confirmed credentials, validate them only within the authorized assessment scope.

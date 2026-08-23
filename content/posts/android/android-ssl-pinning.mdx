@@ -1,7 +1,7 @@
 ---
-title: "Understanding Android SSL Pinning"
+title: "What is SSL Pinning ?"
 description: "A practical introduction to analyzing certificate pinning in Android applications."
-date: "2026-08-22"
+date: "2026-01-05"
 category: "android"
 tags:
   - Android
@@ -12,32 +12,174 @@ featured: true
 published: true
 ---
 
-# Understanding Android SSL Pinning
+## What is SSL & TLS?
 
-Certificate pinning is a client-side control intended to restrict which certificates or public keys an application trusts.
+SSL = Secure Sockets Layer.
+TLS = Transport Layer Security.
 
-<Callout type="warning">
-Only perform security testing against applications and systems you are authorized to assess.
-</Callout>
+SSL was the original protocol used to secure network communication between a client and server.
+TLS is the modern protocol used to secure communications.
 
-## Introduction
+## What is SSL/TLS certificate pinning?
 
-During an authorized mobile assessment, the first step is to understand how the application establishes TLS connections and whether it adds pinning on top of normal certificate validation.
-
-## Testing Methodology
-
-Start by identifying the networking stack, certificate configuration and trust-management code.
+Normal TLS says "I trust certificates that chain to an acceptable trusted CA."
+Certificate pinning adds another restriction: "For this particular server, I expect this specific certificate or public key."
 
 ```bash
-adb shell pm list packages | grep example
+Normal validation
+
+api.example.com
+      ↓
+Certificate
+      ↓
+Trusted CA
+      ↓
+VALID
+```
+Pinning adds:
+```bash
+Certificate
+     ↓
+Trusted CA
+     +
+Expected public key/certificate
+     ↓
+VALID
 ```
 
-Then inspect the application statically and validate behavior dynamically in an authorized test environment.
+## Why was certificate pinning introduced?
 
-## Mitigation
+Consider a normal CA ecosystem.
+Your device may trust hundreds of certificate authorities.
 
-Pinning should be implemented carefully and maintained through a controlled certificate rotation process. It should complement, not replace, proper server-side authentication and authorization.
+```bash
+Android trust store
 
-## Conclusion
+CA 1
+CA 2
+CA 3
+CA 4
+CA 5
+...
+CA N
+```
+Suppose the legitimate server has:
 
-The useful question is not simply whether pinning exists. The assessment should determine where trust is established, how it is enforced, and whether the overall application security model remains sound.
+```bash
+api.example.com
+      ↓
+Certificate
+      ↓
+CA X
+```
+If another trusted CA can issue a certificate for: api.example.com, then ordinary CA validation could potentially accept it.
+
+Pinning says: 
+
+```bash
+I don't merely trust "any valid certificate."
+I expect THIS certificate/public key.
+```
+
+## SSL Pinning Implementation:
+
+Android framework/config ( network configure xml file ) 
+Java/Kotlin custom ( application code java level )
+HTTP library ( Okhttp or similar )
+Native ( .so libraries ) 
+Hybrid ( Java + JNI + Native ) 
+
+## How would your assessment identify Java pinning?
+
+During static analysis, you would look for things such as:
+```bash
+CertificatePinner
+TrustManager
+X509TrustManager
+checkServerTrusted
+SSLContext
+SSLSocketFactory
+KeyStore
+CertificateFactory
+HostnameVerifier
+```
+And for custom logic:
+```bash
+MessageDigest
+SHA-256
+X509Certificate
+getPublicKey()
+checkServerTrusted()
+```
+The presence of:
+```bash
+getPublicKey() combined with: SHA-256 and a hardcoded value is particularly interesting.
+```
+Conceptually:
+```bash
+getPublicKey()
+      ↓
+MessageDigest SHA-256
+      ↓
+compare against hardcoded value
+```
+That strongly suggests public-key pinning logic.
+
+## Native-level SSL pinning
+
+An Android application doesn't have to perform TLS entirely in Java/Kotlin. 
+It can use: Java/Kotlin -> JNI -> Native C/C++ -> TLS library -> Socket
+The native library might use a TLS implementation such as:
+```bash
+BoringSSL
+OpenSSL
+mbedTLS
+custom TLS implementation
+The exact implementation depends on the application.
+```
+## Native pinning architecture
+
+```bash
+Android application
+        |
+        ↓
+       JNI
+        |
+        ↓
+   libnative.so
+        |
+        +---- TLS initialization
+        |
+        +---- certificate loading
+        |
+        +---- verification callback
+        |
+        +---- pin comparison
+        |
+        ↓
+    TLS library
+        |
+        ↓
+     socket
+```
+The pinning logic could therefore be completely absent from Java.
+You might search the APK's: for native libraries.
+lib/arm64-v8a/
+lib/armeabi-v7a/
+lib/x86_64/
+
+## Native certificate verification , conceptually
+```bash
+certificate = get_peer_certificate();
+
+public_key = extract_public_key(certificate);
+
+hash = sha256(public_key);
+
+if (memcmp(hash, expected_pin, 32) != 0) {
+    return VERIFY_FAILED;
+}
+
+return VERIFY_SUCCESS;
+```
+The actual implementation might be heavily optimized, obfuscated, split between several functions, or delegated to a TLS library callback.

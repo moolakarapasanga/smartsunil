@@ -1,0 +1,94 @@
+---
+title: "Get the IPA file"
+description: "Get the IPA file from different resources"
+date: "2026-06-21"
+category: "ios"
+tags:
+  - iOS
+  - IPA
+  - Mobile Security
+author: "Security Research"
+published: true
+---
+
+## 1. TestFlight App
+
+TestFlight apps are encrypted + sandboxed
+
+# Method - 1
+Dump IPA from installed app 
+	Steps:
+		1. Install app via TestFlight
+		2. Open jailbreak package manager (Sileo/Zebra)
+		3. Install - frida , frida-ios-dump OR bfdecrypt OR CrackerXI+
+		4. git clone https://github.com/AloneMonkey/frida-ios-dump 
+		5. python dump.py BundleID
+		
+Now we will get "decrypted IPA" 
+
+	
+# Method - 2 
+1. bfdecrypt (on-device)
+2. Install bfdecrypt tweak
+3. Launch app once and go to "/var/mobile/Containers/Data/Application/" or "/var/mobile/Documents/CrackerXI/"
+4. IPA will be dumped automatically. 
+
+## 2. App Store App
+Method - 1
+1. Install from App Store
+2. Sse decrypt.day 
+3. Use frida-ios-dump , bfdecrypt , CrackerXI+
+4. You’ll get decrypted IPA 
+
+App Store apps are: Encrypted with FairPlay DRM , decrypted only in memory 
+
+## 3. Diawi Link
+# Method - 1 
+1.Direct IPA link exposed
+2. Open - https://webapp.diawi.com/install
+3. Then:
+	Open link in browser (Chrome) 
+	Press F12 → Network tab
+	Look for: .ipa , plist 
+	will see something like - https://.../app.ipa
+	
+# Method - 2 
+Diawi uses:  itms-services://?action=download-manifest&url=manifest.plist
+Steps:  Copy the manifest URL , Open it in browser
+Inside you’ll see: 
+```bash
+    <key>url</key>
+    <string>https://.../yourapp.ipa</string>
+```
+Copy IPA link and download.
+
+
+Direct IPA from Diawi → often still encrypted
+For pentesting → decrypted IPA is what you need
+Use:
+ Frida (dynamic)
+ Ghidra / IDA (static after dump)
+ 
+## 4. Decrypt Day 
+ 
+ Use this website -> https://decrypt.day/home
+ For get the IPA files.
+
+<Callout type="warning">
+Use these techniques only in applications you are authorized to test.
+</Callout>
+ 
+## 5. For MAC Book 
+ 
+ Xcode → Devices & Simulators → Download container - Only gives sandbox data, NOT IPA
+
+## Install the IPA file 
+
+1. xcode [ only mac ] 
+2. cydia impactor [ it's now working with apple id] 
+3. site loading 
+4. itunes with zebra 
+5. 3uTools 
+6. iMazing software for windows 
+7. 3uTools for install IPA files 
+8. Atlstore for install IPA file with Apple ID 
