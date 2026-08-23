@@ -133,40 +133,6 @@ const tools = {
     "Lakera Guardian",
   ],
 };
-
-const methodology = [
-  {
-    number: "01",
-    title: "Reconnaissance",
-    description: "Understand the application, infrastructure and exposed attack surface.",
-  },
-  {
-    number: "02",
-    title: "Attack Surface",
-    description: "Map endpoints, services, APIs, application components and trust boundaries.",
-  },
-  {
-    number: "03",
-    title: "Manual Testing",
-    description: "Validate security controls through manual testing rather than relying only on scanners.",
-  },
-  {
-    number: "04",
-    title: "Deep Analysis",
-    description: "Use source code review, binary analysis and runtime instrumentation where required.",
-  },
-  {
-    number: "05",
-    title: "Exploitation",
-    description: "Validate vulnerabilities and determine their real security impact.",
-  },
-  {
-    number: "06",
-    title: "Reporting",
-    description: "Document reproducible findings with evidence, impact and practical remediation.",
-  },
-];
-
 export default function PortfolioPage() {
   return (
     <main className="min-h-screen bg-[#05080c] text-slate-100">
@@ -178,8 +144,7 @@ export default function PortfolioPage() {
           <div className="grid gap-16 lg:grid-cols-[1.5fr_0.5fr] lg:items-end">
             <div>
               <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-[#38D9E6]">
-                <span className="h-px w-8 bg-[#38D9E6]" />
-                Security Engineer
+                # Security Engineer
               </div>
 
               <h1 className="mt-7 max-w-5xl text-5xl font-bold leading-[0.95] tracking-[-0.05em] sm:text-6xl lg:text-8xl">
