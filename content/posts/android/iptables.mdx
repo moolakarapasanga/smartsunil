@@ -1,0 +1,55 @@
+---
+title: "Android Proxy Settings with iptables"
+description: "A simple technique to redirect Android HTTPS traffic to Burp Suite when the application ignores proxy settings."
+date: "2026-08-23"
+category: "android"
+tags:
+  - Android
+  - SSL Pinning
+  - iptables
+  - Mobile Security
+author: "Security Research"
+featured: true
+published: true
+---
+
+<Callout type="warning">
+Only perform security testing against applications and systems you are authorized to assess.
+</Callout>
+
+## Introduction
+
+During an Android security assessment, I encountered an application that was ignoring traditional interception methods such as:
+
+System proxy , Wi-Fi proxy configuration , VPN-based interception
+
+The application was using direct sockets and native/custom networking, so the traffic never reached Burp Suite.
+
+## Using iptables
+
+To force the traffic through Burp Suite, I used iptables at the kernel networking layer:
+
+```bash
+iptables -t nat -A OUTPUT \ 
+-p tcp \ --dport 443 \ 
+-j DNAT \ 
+--to-destination <BURP_IP>:8080
+```
+
+This redirects outgoing TCP traffic targeting port 443 to the Burp Suite listener.
+
+<Callout type="warning"> Only use traffic redirection and interception on applications and devices you are authorized to test. </Callout>
+
+## Important Note
+
+This technique handles traffic redirection, not TLS validation.
+
+This is technique only supported rooted device
+
+If the application uses certificate pinning, you may still need to handle pinning separately before HTTPS traffic can be inspected.
+
+Also keep in mind that this rule targets TCP/443. Applications using QUIC/HTTP3 or other protocols may require a different approach.
+
+## Quick Reference
+
+Useful when an Android application bypasses the normal proxy configuration and communicates directly with its backend.

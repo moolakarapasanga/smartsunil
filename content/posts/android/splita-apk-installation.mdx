@@ -1,0 +1,94 @@
+---
+title: "Extract and Install Split APK from Android Device"
+description: "A simple guide to extracting split APK files from an Android device and reinstalling them using ADB."
+date: "2026-07-20"
+category: "android"
+tags:
+  - Android
+  - ADB
+  - Split APK
+  - Mobile Security
+author: "Security Research"
+featured: true
+published: true
+---
+
+# Extract and Install Split APK from Android Device
+
+If an Android application is installed as a **split APK**, you can extract all APK files from the device and reinstall them using `adb install-multiple`.
+
+## 1. Find the Package Name
+
+```bash
+adb shell pm list packages | findstr <package_name>
+```
+
+Example:
+
+```bash
+adb shell pm list packages | findstr jetblue
+```
+
+## 2. Get APK Paths
+
+```bash
+adb shell pm path <package_name>
+```
+
+This returns the paths of the base APK and all split APKs.
+
+```text
+package:/data/app/.../base.apk
+package:/data/app/.../split_config.arm64_v8a.apk
+package:/data/app/.../split_config.en.apk
+package:/data/app/.../split_config.xxhdpi.apk
+```
+
+## 3. Download All APK Files
+
+Pull each APK using the paths returned above:
+
+```bash
+adb pull /data/app/.../base.apk
+adb pull /data/app/.../split_config.arm64_v8a.apk
+adb pull /data/app/.../split_config.en.apk
+adb pull /data/app/.../split_config.xxhdpi.apk
+```
+
+Make sure to download **all** the APK files.
+
+## 4. Install the Split APKs
+
+Install all the APKs together:
+
+```bash
+adb install-multiple base.apk split_config.arm64_v8a.apk split_en.apk etc..
+```
+
+The exact split files depend on the application and device architecture.
+
+## Frida Process Identification
+
+To find the application's process ID:
+
+```bash
+adb shell ps | findstr <package_name>
+```
+
+Example:
+
+```bash
+adb shell ps | findstr io.example.fridatarget
+```
+
+Then attach Frida to the process:
+
+```bash
+frida -U -p <PID>
+```
+
+Example:
+
+```bash
+frida -U -p 2070
+```

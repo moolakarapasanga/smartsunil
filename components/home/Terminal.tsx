@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const lines = [
   "$ whoami",
-  "security-researcher",
+  "Sunil - Security-Researcher",
   "",
   "$ ls",
   "android  ios  web  cloud  api  ai  research",

@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "smartsunil.in",
-  title: "Security Research",
+  title: "Smart Sunil",
   description:
     "Security research, technical experiments, application security, reverse engineering and security engineering.",
   url: "https://smartsunil.in",

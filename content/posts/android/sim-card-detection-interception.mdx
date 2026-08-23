@@ -1,0 +1,60 @@
+---
+title: "HTTP Toolkit to Solve the Simcard required application proxy"
+description: "A simple technique to intercept Android application traffic when the app works only over mobile data and ignores traditional proxy settings."
+date: "2026-08-23"
+category: "android"
+tags:
+  - Android
+  - HTTP Toolkit
+  - ADB
+  - Mobile Security
+author: "Security Research"
+featured: true
+published: true
+---
+
+<Callout type="warning">
+Only perform security testing against applications and devices you are authorized to assess.
+</Callout>
+
+## Introduction
+
+During a recent Android security assessment, I encountered an interesting networking challenge.
+
+The application:
+
+- Required a valid SIM card.
+- Worked only over mobile data.
+- Refused to communicate over Wi-Fi.
+- Did not send any traffic to Burp Suite, even with a manual proxy configured.
+
+I tried several approaches:
+
+- USB tethering
+- Hotspot sharing
+- `adb reverse`
+- `iptables`
+- VPN interception
+- Packet capture apps
+- Router-based MITM
+
+None of them worked.
+
+## Using HTTP Toolkit Over ADB
+
+After trying multiple approaches, I came across **HTTP Toolkit's Android over ADB** feature.
+
+The setup was simple:
+
+1. Insert a valid SIM card and enable mobile data.
+2. Connect the Android device to the PC using ADB.
+3. Open HTTP Toolkit.
+4. Pair the device using the QR code provided by HTTP Toolkit.
+5. Launch the application.
+6. Start capturing the application's traffic.
+
+The application continued using its mobile data connection while HTTP Toolkit intercepted the traffic through the ADB connection.
+
+## Result
+
+This worked for the application and allowed me to capture its HTTP/HTTPS requests without relying on Wi-Fi proxy configuration.
