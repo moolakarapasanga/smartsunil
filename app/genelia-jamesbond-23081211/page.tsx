@@ -137,6 +137,11 @@ export default async function ResearchPage() {
           memories and plenty of reasons to be happy. 💕
         </p>
 
+        <p className="birthday-message second">
+          Sikirram intha ofc ah vitu relive agidu 
+          Next, Birthday ve Vera Office Celabrate pannuvom. 😄
+        </p>
+
         <div className="birthday-signature">
           With warm wishes ❤️
         </div>
@@ -146,6 +151,213 @@ export default async function ResearchPage() {
       {/* =====================================================
           LOGOUT
           ===================================================== */}
+
+             {/* =====================================================
+          NEXT BIRTHDAY COUNTDOWN
+          ===================================================== */}
+
+      <section className="next-birthday-countdown">
+        <div className="countdown-card">
+
+          <div className="countdown-icon">
+            🎂
+          </div>
+
+          <div className="countdown-label">
+            NEXT BIRTHDAY
+          </div>
+
+          <h2>
+            The Countdown Begins 💗
+          </h2>
+
+          <div
+            id="birthday-countdown"
+            className="countdown-grid"
+          >
+            <div className="countdown-item">
+              <span id="birthday-months">00</span>
+              <small>Months</small>
+            </div>
+
+            <div className="countdown-item">
+              <span id="birthday-days">00</span>
+              <small>Days</small>
+            </div>
+
+            <div className="countdown-item">
+              <span id="birthday-hours">00</span>
+              <small>Hours</small>
+            </div>
+
+            <div className="countdown-item">
+              <span id="birthday-minutes">00</span>
+              <small>Minutes</small>
+            </div>
+
+            <div className="countdown-item">
+              <span id="birthday-seconds">00</span>
+              <small>Seconds</small>
+            </div>
+          </div>
+
+          <p>
+            🎈 Every second brings the next celebration closer 💕
+          </p>
+
+        </div>
+      </section>
+
+      <script
+  dangerouslySetInnerHTML={{
+    __html: `
+      window.addEventListener("load", function () {
+
+        const birthdayMonth = 7;
+        const birthdayDay = 23;
+
+        function getNextBirthday() {
+          const now = new Date();
+
+          let year = now.getFullYear();
+
+          let birthday = new Date(
+            year,
+            birthdayMonth,
+            birthdayDay,
+            0,
+            0,
+            0
+          );
+
+          if (birthday <= now) {
+            birthday = new Date(
+              year + 1,
+              birthdayMonth,
+              birthdayDay,
+              0,
+              0,
+              0
+            );
+          }
+
+          return birthday;
+        }
+
+        const target = getNextBirthday();
+
+        function updateCountdown() {
+
+          const now = new Date();
+
+          let cursor = new Date(now);
+
+          let months = 0;
+
+          while (true) {
+
+            const nextMonth =
+              new Date(cursor);
+
+            nextMonth.setMonth(
+              nextMonth.getMonth() + 1
+            );
+
+            if (nextMonth > target) {
+              break;
+            }
+
+            cursor = nextMonth;
+
+            months++;
+          }
+
+          let remaining =
+            target.getTime() -
+            cursor.getTime();
+
+          const dayMs =
+            1000 * 60 * 60 * 24;
+
+          const hourMs =
+            1000 * 60 * 60;
+
+          const minuteMs =
+            1000 * 60;
+
+          const days =
+            Math.floor(
+              remaining / dayMs
+            );
+
+          remaining %= dayMs;
+
+          const hours =
+            Math.floor(
+              remaining / hourMs
+            );
+
+          remaining %= hourMs;
+
+          const minutes =
+            Math.floor(
+              remaining / minuteMs
+            );
+
+          remaining %= minuteMs;
+
+          const seconds =
+            Math.floor(
+              remaining / 1000
+            );
+
+          const values = {
+            months,
+            days,
+            hours,
+            minutes,
+            seconds
+          };
+
+          Object.entries(values).forEach(
+            ([key, value]) => {
+
+              const element =
+                document.getElementById(
+                  "birthday-" + key
+                );
+
+              if (element) {
+                element.textContent =
+                  String(value).padStart(
+                    2,
+                    "0"
+                  );
+              }
+
+            }
+          );
+        }
+
+        /*
+         * Wait until React hydration has
+         * completed before changing the DOM.
+         */
+        setTimeout(() => {
+
+          updateCountdown();
+
+          window.setInterval(
+            updateCountdown,
+            1000
+          );
+
+        }, 100);
+
+      });
+    `,
+  }}
+/>  
 
       <div className="logout-wrapper">
         <LogoutButton />
@@ -1159,6 +1371,189 @@ export default async function ResearchPage() {
           }
 
         }
+
+        /* ---------------------------------------------------
+   NEXT BIRTHDAY COUNTDOWN
+   --------------------------------------------------- */
+
+.next-birthday-countdown {
+  position: relative;
+  z-index: 12;
+
+  width: min(90%, 850px);
+
+  margin: 40px auto 90px;
+
+  padding: 0 20px;
+}
+
+
+.countdown-card {
+  padding: 35px 25px;
+
+  text-align: center;
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.82),
+      rgba(255, 232, 244, 0.88)
+    );
+
+  border:
+    1px solid rgba(255, 255, 255, 0.9);
+
+  box-shadow:
+    0 20px 55px rgba(174, 87, 125, 0.13);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+
+.countdown-icon {
+  font-size: 40px;
+
+  margin-bottom: 5px;
+}
+
+
+.countdown-label {
+  color: #c15d88;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.25em;
+
+  text-transform: uppercase;
+}
+
+
+.countdown-card h2 {
+  margin-top: 8px;
+
+  color: #a74f78;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(24px, 4vw, 34px);
+
+  font-weight: 700;
+}
+
+
+.countdown-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, 1fr);
+
+  gap: 12px;
+
+  margin-top: 25px;
+}
+
+
+.countdown-item {
+  padding: 18px 8px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(255, 255, 255, 0.72);
+
+  border:
+    1px solid rgba(249, 168, 212, 0.45);
+
+  box-shadow:
+    0 8px 20px
+    rgba(174, 87, 125, 0.07);
+}
+
+
+.countdown-item span {
+  display: block;
+
+  color: #d44d80;
+
+  font-size:
+    clamp(25px, 5vw, 40px);
+
+  font-weight: 800;
+
+  line-height: 1;
+}
+
+
+.countdown-item small {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #bd5d88;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+
+.countdown-card p {
+  margin-top: 22px;
+
+  color: #c15d88;
+
+  font-size: 13px;
+}
+
+
+@media (max-width: 640px) {
+
+  .next-birthday-countdown {
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 0 14px;
+  }
+
+
+  .countdown-card {
+    padding: 28px 14px;
+
+    border-radius: 24px;
+  }
+
+
+  .countdown-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 9px;
+  }
+
+
+  .countdown-item:last-child {
+    grid-column: 1 / -1;
+
+    width: 50%;
+
+    margin: 0 auto;
+  }
+
+}  
 
       `}</style>
     </main>
