@@ -137,14 +137,14 @@ export default async function ResearchPage() {
           memories and plenty of reasons to be happy. 💕
         </p>
 
+        <div className="birthday-signature">
+          With warm wishes ❤️
+        </div>
+
         <p className="birthday-message second">
           Sikirram intha ofc ah vitu relive agidu 
           Next, Birthday ve Vera Office Celabrate pannuvom. 😄
         </p>
-
-        <div className="birthday-signature">
-          With warm wishes ❤️
-        </div>
 
       </div>
 
