@@ -141,11 +141,6 @@ export default async function ResearchPage() {
           With warm wishes ❤️
         </div>
 
-        <p className="birthday-message second">
-          Sikirram intha ofc ah vitu relive agidu 
-          Next, Birthday ve Vera Office Celabrate pannuvom. 😄
-        </p>
-
       </div>
 
       {/* =====================================================

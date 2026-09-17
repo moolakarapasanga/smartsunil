@@ -66,7 +66,7 @@ export default function SignInPage() {
           </h1>
 
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            Enter your credentials to continue.
+            Enter your credentials to access private research
           </p>
         </div>
 

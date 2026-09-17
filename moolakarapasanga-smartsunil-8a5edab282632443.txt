@@ -1,0 +1,5778 @@
+Directory structure:
+└── moolakarapasanga-smartsunil/
+    ├── README.md
+    ├── eslint.config.mjs
+    ├── next-env.d.ts
+    ├── next.config.ts
+    ├── package.json
+    ├── postcss.config.mjs
+    ├── tsconfig.json
+    ├── .env.example
+    ├── app/
+    │   ├── error.tsx
+    │   ├── globals.css
+    │   ├── layout.tsx
+    │   ├── not-found.tsx
+    │   ├── page.tsx
+    │   ├── robots.ts
+    │   ├── sitemap.ts
+    │   ├── api/
+    │   │   ├── login/
+    │   │   │   └── route.ts
+    │   │   └── logout/
+    │   │       └── route.ts
+    │   ├── blog/
+    │   │   ├── page.tsx
+    │   │   └── [slug]/
+    │   │       └── page.tsx
+    │   ├── category/
+    │   │   └── [category]/
+    │   │       └── page.tsx
+    │   ├── genelia-jamesbond-23081211/
+    │   │   └── page.tsx
+    │   ├── portfolio/
+    │   │   └── page.tsx
+    │   ├── sign-in/
+    │   │   └── page.tsx
+    │   └── testing/
+    │       └── page.tsx
+    ├── components/
+    │   ├── BirthdayMusic.tsx
+    │   ├── LogoutButton.tsx
+    │   ├── blog/
+    │   │   ├── BlogCard.tsx
+    │   │   ├── BlogShell.tsx
+    │   │   ├── Sidebar.tsx
+    │   │   └── TableOfContents.tsx
+    │   ├── home/
+    │   │   ├── Hero.tsx
+    │   │   ├── ResearchAreas.tsx
+    │   │   └── Terminal.tsx
+    │   ├── layout/
+    │   │   ├── Footer.tsx
+    │   │   ├── Header.tsx
+    │   │   ├── MobileNav.tsx
+    │   │   └── SiteChrome.tsx
+    │   ├── mdx/
+    │   │   ├── Callout.tsx
+    │   │   ├── CodeBlock.tsx
+    │   │   ├── CommandBlock.tsx
+    │   │   ├── HttpRequest.tsx
+    │   │   ├── HttpResponse.tsx
+    │   │   └── MDXComponents.tsx
+    │   └── ui/
+    │       ├── Badge.tsx
+    │       ├── CopyButton.tsx
+    │       └── ThemeToggle.tsx
+    ├── config/
+    │   ├── categories.ts
+    │   └── site.ts
+    ├── content/
+    │   └── posts/
+    │       ├── ai-security/
+    │       │   └── understanding-prompt-injection.mdx
+    │       ├── android/
+    │       │   ├── android-ssl-pinning.mdx
+    │       │   ├── flutter-app-ssl-pinning-bypass.mdx
+    │       │   ├── iptables.mdx
+    │       │   ├── sim-card-detection-interception.mdx
+    │       │   └── splita-apk-installation.mdx
+    │       ├── api/
+    │       │   └── practical-api-authorization-testing.mdx
+    │       ├── cloud/
+    │       │   └── aws-s3-security.mdx
+    │       ├── devsecops/
+    │       │   └── sast-pipeline.mdx
+    │       ├── ios/
+    │       │   ├── get-the-ipa-from-the-sources.mdx
+    │       │   ├── ssl-kill-switch-2.mdx
+    │       │   └── static-analysis.mdx
+    │       ├── network/
+    │       │   └── network-recon.mdx
+    │       ├── reverse-engineering/
+    │       │   └── frida-basics.mdx
+    │       └── web/
+    │           └── http-request-smuggling.mdx
+    ├── lib/
+    │   ├── categories.ts
+    │   ├── mdx.ts
+    │   ├── posts.ts
+    │   └── utils.ts
+    └── types/
+        └── blog.ts
+
+================================================
+FILE: README.md
+================================================
+# Security Research Website
+
+Next.js + TypeScript + Tailwind + MDX cybersecurity research site.
+
+## Run
+
+```bash
+npm install
+npm run dev
+```
+
+## Production
+
+```bash
+npm run build
+npm start
+```
+
+## Add a blog post
+
+Create:
+
+```text
+content/posts/<category>/<slug>.mdx
+```
+
+Add frontmatter and write the article. No React registration is required.
+
+## Routes
+
+- `/`
+- `/portfolio`
+- `/blog`
+- `/blog/<slug>`
+- `/category/<category>`
+- `/sign-in`
+
+
+
+================================================
+FILE: eslint.config.mjs
+================================================
+import { defineConfig } from "eslint/config";
+import { FlatCompat } from "@eslint/eslintrc";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+export default defineConfig([
+  ...compat.extends("next/core-web-vitals"),
+
+  {
+    ignores: [
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+      "node_modules/**",
+    ],
+  },
+]);
+
+
+================================================
+FILE: next-env.d.ts
+================================================
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+/// <reference path="./.next/types/routes.d.ts" />
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+
+
+
+================================================
+FILE: next.config.ts
+================================================
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  pageExtensions: ["ts", "tsx", "md", "mdx"],
+};
+
+export default nextConfig;
+
+
+================================================
+FILE: package.json
+================================================
+{
+  "name": "security-research",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@mdx-js/react": "^3.1.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@vercel/analytics": "^2.0.1",
+    "gray-matter": "^4.0.3",
+    "lucide-react": "^0.468.0",
+    "next": "^15.5.0",
+    "next-mdx-remote": "^6.0.0",
+    "next-themes": "^0.4.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "reading-time": "^1.5.0",
+    "rehype-pretty-code": "^0.14.0",
+    "remark-gfm": "^4.0.1",
+    "shiki": "^3.12.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.6",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.5.23",
+    "postcss": "^8.5.26",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.7.2"
+  }
+}
+
+
+
+================================================
+FILE: postcss.config.mjs
+================================================
+const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+
+
+================================================
+FILE: tsconfig.json
+================================================
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}
+
+
+================================================
+FILE: .env.example
+================================================
+# Add future authentication or external service configuration here.
+
+
+
+================================================
+FILE: app/error.tsx
+================================================
+ "use client";
+
+import { useEffect } from "react";
+
+export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  useEffect(() => console.error(error), [error]);
+
+  return (
+    <main className="grid min-h-[70vh] place-items-center px-5 text-center">
+      <div>
+        <div className="font-mono text-sm text-red-300">500 / ERROR</div>
+        <h1 className="mt-3 text-4xl font-bold">Something broke.</h1>
+        <button onClick={() => reset()} className="mt-6 rounded-lg border border-white/10 px-4 py-2 text-sm hover:bg-white/5">
+          Try again
+        </button>
+      </div>
+    </main>
+  );
+}
+
+
+
+================================================
+FILE: app/globals.css
+================================================
+@import "tailwindcss";
+
+/* =========================================================
+   MIDNIGHT + CYAN GLOBAL THEME
+   ========================================================= */
+
+:root {
+  /* Backgrounds */
+  --background: #071014;
+  --background-secondary: #0a151a;
+  --background-tertiary: #0d181d;
+
+  /* Surfaces */
+  --surface: #0d181d;
+  --surface-hover: #122127;
+  --surface-elevated: #14262c;
+
+  /* Text */
+  --foreground: #f2fafa;
+  --text-primary: #f2fafa;
+  --text-secondary: #b1c1c6;
+  --text-muted: #91a6ac;
+  --text-subtle: #63777d;
+
+  /* Cyan */
+  --accent: #38d9e6;
+  --accent-light: #8decf2;
+  --accent-dark: #18b9c7;
+
+  /* Cyan transparency */
+  --accent-5: rgba(56, 217, 230, 0.05);
+  --accent-10: rgba(56, 217, 230, 0.1);
+  --accent-15: rgba(56, 217, 230, 0.15);
+  --accent-20: rgba(56, 217, 230, 0.2);
+  --accent-30: rgba(56, 217, 230, 0.3);
+
+  /* Borders */
+  --border: #21343a;
+  --border-light: #294149;
+  --border-accent: rgba(56, 217, 230, 0.28);
+
+  /* Status */
+  --success: #45e6a3;
+  --warning: #f5c451;
+  --danger: #ff6b7a;
+  --info: #38d9e6;
+
+  /* Code */
+  --code-background: #050b0e;
+  --code-border: #1b3036;
+
+  /* Shadows */
+  --shadow-cyan:
+    0 0 30px rgba(56, 217, 230, 0.08);
+
+  --shadow-cyan-strong:
+    0 0 40px rgba(56, 217, 230, 0.14);
+}
+
+/* =========================================================
+   LIGHT THEME
+   ========================================================= */
+
+.light {
+  --background: #f4fafb;
+  --background-secondary: #edf5f6;
+  --background-tertiary: #e5f0f2;
+
+  --surface: #ffffff;
+  --surface-hover: #f0f8f9;
+  --surface-elevated: #ffffff;
+
+  --foreground: #0b171b;
+  --text-primary: #0b171b;
+  --text-secondary: #43575d;
+  --text-muted: #63777d;
+  --text-subtle: #7f9196;
+
+  --accent: #079eaa;
+  --accent-light: #087d87;
+  --accent-dark: #067b85;
+
+  --accent-5: rgba(7, 158, 170, 0.05);
+  --accent-10: rgba(7, 158, 170, 0.1);
+  --accent-15: rgba(7, 158, 170, 0.15);
+  --accent-20: rgba(7, 158, 170, 0.2);
+  --accent-30: rgba(7, 158, 170, 0.3);
+
+  --border: #d5e4e7;
+  --border-light: #c5dadd;
+  --border-accent: rgba(7, 158, 170, 0.3);
+
+  --code-background: #eef5f6;
+  --code-border: #cfdee1;
+
+  --shadow-cyan:
+    0 0 30px rgba(7, 158, 170, 0.08);
+
+  --shadow-cyan-strong:
+    0 0 40px rgba(7, 158, 170, 0.14);
+}
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      rgba(56, 217, 230, 0.07),
+      transparent 35%
+    ),
+    var(--background);
+
+  color: var(--foreground);
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  background: rgba(56, 217, 230, 0.25);
+  color: #ffffff;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #20363c;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dark);
+}
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+/* =========================================================
+   CYAN UTILITY CLASSES
+   ========================================================= */
+
+.text-accent {
+  color: var(--accent);
+}
+
+.text-accent-light {
+  color: var(--accent-light);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-accent-soft {
+  background-color: var(--accent-10);
+}
+
+.border-accent {
+  border-color: var(--border-accent);
+}
+
+/* =========================================================
+   GLOW
+   ========================================================= */
+
+.cyan-glow {
+  box-shadow: var(--shadow-cyan);
+}
+
+.cyan-glow-strong {
+  box-shadow: var(--shadow-cyan-strong);
+}
+
+/* =========================================================
+   GRID BACKGROUND
+   ========================================================= */
+
+.cyber-grid {
+  background-image:
+    linear-gradient(
+      rgba(56, 217, 230, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(56, 217, 230, 0.035) 1px,
+      transparent 1px
+    );
+
+  background-size: 40px 40px;
+}
+
+/* =========================================================
+   TERMINAL
+   ========================================================= */
+
+.terminal {
+  background: #050b0e;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-cyan);
+}
+
+.terminal-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.terminal-prompt {
+  color: var(--accent);
+}
+
+.terminal-command {
+  color: var(--foreground);
+}
+
+.terminal-output {
+  color: var(--text-secondary);
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 17px;
+  margin-left: 4px;
+  vertical-align: middle;
+  background: var(--accent);
+  animation: terminal-blink 1s steps(1) infinite;
+}
+
+@keyframes terminal-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.research-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.research-card:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-cyan);
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--accent);
+  color: #041014;
+
+  border: 1px solid var(--accent);
+
+  border-radius: 9px;
+
+  padding: 10px 18px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: var(--accent-light);
+  color: #041014;
+  box-shadow: 0 0 25px rgba(56, 217, 230, 0.22);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  color: var(--text-primary);
+
+  border: 1px solid var(--border);
+
+  border-radius: 9px;
+
+  padding: 10px 18px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: var(--accent-5);
+  border-color: var(--border-accent);
+  color: var(--accent);
+}
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+input,
+textarea,
+select {
+  background: var(--surface);
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-subtle);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(56, 217, 230, 0.08);
+}
+
+/* =========================================================
+   CODE
+   ========================================================= */
+
+pre {
+  background: var(--code-background) !important;
+  border: 1px solid var(--code-border);
+  border-radius: 12px;
+}
+
+code {
+  font-family:
+    "JetBrains Mono",
+    "Fira Code",
+    Consolas,
+    monospace;
+}
+
+/* =========================================================
+   PROSE / BLOG
+   ========================================================= */
+
+.prose-research {
+  color: var(--text-secondary);
+  line-height: 1.85;
+}
+
+.prose-research h1,
+.prose-research h2,
+.prose-research h3,
+.prose-research h4 {
+  color: var(--text-primary);
+}
+
+.prose-research h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+  font-weight: 650;
+}
+
+.prose-research h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.prose-research p {
+  margin: 1rem 0;
+}
+
+.prose-research a {
+  color: var(--accent);
+}
+
+.prose-research a:hover {
+  color: var(--accent-light);
+  text-decoration: underline;
+}
+
+.prose-research strong {
+  color: var(--text-primary);
+}
+
+.prose-research blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+
+  border-left: 3px solid var(--accent);
+
+  background: var(--accent-5);
+
+  color: var(--text-secondary);
+}
+
+/* =========================================================
+   BADGES
+   ========================================================= */
+
+.badge-cyan {
+  display: inline-flex;
+  align-items: center;
+
+  border: 1px solid var(--border-accent);
+  background: var(--accent-10);
+
+  color: var(--accent);
+
+  border-radius: 999px;
+
+  padding: 4px 9px;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.site-header {
+  background: rgba(7, 16, 20, 0.82);
+  border-bottom: 1px solid var(--border);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--accent);
+}
+
+.nav-link-active {
+  color: var(--accent);
+}
+
+/* =========================================================
+   DIVIDERS
+   ========================================================= */
+
+.divider {
+  height: 1px;
+  background: var(--border);
+}
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+   ========================================================= */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+================================================
+FILE: app/layout.tsx
+================================================
+import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
+import { siteConfig } from "@/config/site";
+import { SiteChrome } from "@/components/layout/SiteChrome";
+import "./globals.css";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+
+  title: {
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
+  },
+
+  description: siteConfig.description,
+
+  openGraph: {
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+        >
+          <SiteChrome>
+            {children}
+          </SiteChrome>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
+
+
+================================================
+FILE: app/not-found.tsx
+================================================
+import Link from "next/link";
+
+export default function NotFound() {
+  return (
+    <main className="grid min-h-[70vh] place-items-center px-5 text-center">
+      <div>
+        <div className="font-mono text-sm text-[#38D9E6]">404 / NOT FOUND</div>
+        <h1 className="mt-3 text-5xl font-bold">Research not found.</h1>
+        <p className="mt-4 text-slate-500">The requested resource does not exist.</p>
+        <Link href="/blog" className="mt-7 inline-block rounded-lg border border-white/10 px-4 py-2 text-sm hover:bg-white/5">Back to Blog</Link>
+      </div>
+    </main>
+  );
+}
+
+
+
+================================================
+FILE: app/page.tsx
+================================================
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { Hero } from "@/components/home/Hero";
+import { Terminal } from "@/components/home/Terminal";
+import { ResearchAreas } from "@/components/home/ResearchAreas";
+import { BlogCard } from "@/components/blog/BlogCard";
+import { getLatestPosts } from "@/lib/posts";
+
+export default function Home() {
+  const latest = getLatestPosts(3);
+
+  return (
+    <main className="grid-bg">
+      <Hero />
+      <Terminal />
+      <ResearchAreas />
+
+      <section className="mx-auto max-w-6xl px-5 py-24 lg:px-8">
+        <div className="mb-10 flex items-end justify-between gap-5">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[.25em] text-[#38D9E6]">02 / Latest Research</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight">Recent experiments</h2>
+          </div>
+          <Link href="/blog" className="hidden items-center gap-2 text-sm text-slate-500 hover:text-white sm:flex">
+            View all <ArrowUpRight size={15} />
+          </Link>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {latest.map((post) => <BlogCard key={post.slug} post={post} />)}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 pb-32 pt-10 lg:px-8">
+        <div className="rounded-2xl border border-white/10 bg-white/[.015] p-8 md:p-12">
+          <p className="font-mono text-xs uppercase tracking-[.25em] text-[#38D9E6]">03 / Portfolio</p>
+          <div className="mt-5 flex flex-col justify-between gap-8 md:flex-row md:items-end">
+            <h2 className="max-w-2xl text-3xl font-semibold tracking-tight md:text-5xl">
+              Application security, reverse engineering and security research.
+            </h2>
+            <Link href="/portfolio" className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white">
+              Explore portfolio <ArrowUpRight size={15} />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+
+
+================================================
+FILE: app/robots.ts
+================================================
+import type { MetadataRoute } from "next";
+import { siteConfig } from "@/config/site";
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: { userAgent: "*", allow: "/" },
+    sitemap: `${siteConfig.url}/sitemap.xml`
+  };
+}
+
+
+
+================================================
+FILE: app/sitemap.ts
+================================================
+import type { MetadataRoute } from "next";
+import { getAllPosts } from "@/lib/posts";
+import { siteConfig } from "@/config/site";
+import { categories } from "@/config/categories";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const posts = getAllPosts();
+  return [
+    { url: siteConfig.url, lastModified: new Date() },
+    { url: `${siteConfig.url}/portfolio`, lastModified: new Date() },
+    { url: `${siteConfig.url}/blog`, lastModified: new Date() },
+    { url: `${siteConfig.url}/sign-in`, lastModified: new Date() },
+    ...categories.map((category) => ({ url: `${siteConfig.url}/category/${category.slug}`, lastModified: new Date() })),
+    ...posts.map((post) => ({ url: `${siteConfig.url}/blog/${post.slug}`, lastModified: new Date(post.date) }))
+  ];
+}
+
+
+
+================================================
+FILE: app/api/login/route.ts
+================================================
+import { NextResponse } from "next/server";
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+
+    const username = body.username;
+    const password = body.password;
+
+    let redirectTo = "";
+
+    // Admin credentials
+    if (
+      username === process.env.ADMIN_USERNAME &&
+      password === process.env.ADMIN_PASSWORD
+    ) {
+      redirectTo = "/testing";
+    }
+
+    // Researcher credentials
+    else if (
+      username === process.env.RESEARCHER_USERNAME &&
+      password === process.env.RESEARCHER_PASSWORD
+    ) {
+      redirectTo = "/genelia-jamesbond-23081211";
+    }
+
+    // Invalid credentials
+    else {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Invalid username or password"
+        },
+        { status: 401 }
+      );
+    }
+
+    const response = NextResponse.json({
+      success: true,
+      redirectTo
+    });
+
+    response.cookies.set("user_role", username, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24
+    });
+
+    return response;
+  } catch {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Invalid request"
+      },
+      { status: 400 }
+    );
+  }
+}
+
+
+================================================
+FILE: app/api/logout/route.ts
+================================================
+import { NextResponse } from "next/server";
+
+export async function POST() {
+  const response = NextResponse.json({
+    success: true,
+  });
+
+  response.cookies.set("admin_session", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+
+  response.cookies.set("user_role", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 0,
+  });
+
+  return response;
+}
+
+
+================================================
+FILE: app/blog/page.tsx
+================================================
+import { BlogShell } from "@/components/blog/BlogShell";
+import { BlogCard } from "@/components/blog/BlogCard";
+import { getFeaturedPosts, getLatestPosts } from "@/lib/posts";
+
+export default function BlogPage() {
+  const featured = getFeaturedPosts()[0];
+  const latest = getLatestPosts(12);
+
+  return (
+    <main className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
+      <BlogShell>
+        <header className="border-b border-white/10 pb-8">
+          <p className="font-mono text-xs uppercase tracking-[.25em] text-[#38D9E6]">Security Research</p>
+          <h1 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">Technical research & experiments</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-500">
+            Application security, reverse engineering, cloud, API and AI security research.
+          </p>
+        </header>
+
+        {featured && (
+          <section className="mt-8 rounded-2xl border border-white/10 bg-white/[.02] p-6 md:p-8">
+            <div className="font-mono text-xs uppercase tracking-[.2em] text-[#38D9E6]">Featured Research</div>
+            <h2 className="mt-4 text-2xl font-semibold">{featured.title}</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">{featured.description}</p>
+          </section>
+        )}
+
+        <section className="mt-10">
+          <div className="mb-5 flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Latest Research</h2>
+            <span className="font-mono text-xs text-slate-600">{latest.length} articles</span>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {latest.map((post) => <BlogCard key={post.slug} post={post} />)}
+          </div>
+        </section>
+      </BlogShell>
+    </main>
+  );
+}
+
+
+
+================================================
+FILE: app/blog/[slug]/page.tsx
+================================================
+import { notFound } from "next/navigation";
+import { Badge } from "@/components/ui/Badge";
+import { BlogCard } from "@/components/blog/BlogCard";
+import { BlogShell } from "@/components/blog/BlogShell";
+import { TableOfContents } from "@/components/blog/TableOfContents";
+import { getAllPosts, getPostBySlug, getRelatedPosts } from "@/lib/posts";
+import { renderMDX } from "@/lib/mdx";
+import { formatDate } from "@/lib/utils";
+
+export function generateStaticParams() {
+  return getAllPosts().map((post) => ({ slug: post.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
+  if (!post) return {};
+
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article"
+    }
+  };
+}
+
+export default async function ArticlePage({
+  params
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
+  if (!post) notFound();
+
+  const { content } = await renderMDX(post.content);
+  const related = getRelatedPosts(post);
+
+  return (
+    <main className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
+      <BlogShell>
+        <div className="flex justify-center gap-12">
+          <article className="min-w-0 max-w-[760px] flex-1">
+            <header className="border-b border-white/10 pb-8">
+              <Badge>{post.category}</Badge>
+              <h1 className="mt-5 text-4xl font-bold tracking-[-.035em] md:text-6xl">
+                {post.title}
+              </h1>
+              <p className="mt-5 text-lg leading-8 text-slate-500">
+                {post.description}
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3 text-xs text-slate-600">
+                <span>{formatDate(post.date)}</span>
+                <span>·</span>
+                <span>{post.readingTime}</span>
+                {post.tags.map((tag) => (
+                  <span key={tag}>#{tag}</span>
+                ))}
+              </div>
+            </header>
+
+            <div className="prose-research py-10">{content}</div>
+
+            {related.length > 0 && (
+              <section className="border-t border-white/10 py-10">
+                <h2 className="text-xl font-semibold">Related Research</h2>
+                <div className="mt-5 grid gap-4 md:grid-cols-2">
+                  {related.map((item) => (
+                    <BlogCard key={item.slug} post={item} />
+                  ))}
+                </div>
+              </section>
+            )}
+          </article>
+
+          <TableOfContents />
+        </div>
+      </BlogShell>
+    </main>
+  );
+}
+
+
+
+================================================
+FILE: app/category/[category]/page.tsx
+================================================
+import { notFound } from "next/navigation";
+import { BlogShell } from "@/components/blog/BlogShell";
+import { BlogCard } from "@/components/blog/BlogCard";
+import { getPostsByCategory } from "@/lib/posts";
+import { getCategory } from "@/lib/categories";
+import { categories } from "@/config/categories";
+
+export function generateStaticParams() {
+  return categories.map((category) => ({ category: category.slug }));
+}
+
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+  const { category: slug } = await params;
+  const category = getCategory(slug);
+  if (!category) notFound();
+
+  const posts = getPostsByCategory(slug);
+
+  return (
+    <main className="mx-auto max-w-7xl px-5 py-8 lg:px-8">
+      <BlogShell>
+        <header className="border-b border-white/10 pb-8">
+          <p className="font-mono text-xs uppercase tracking-[.25em] text-[#38D9E6]">Category</p>
+          <h1 className="mt-3 text-4xl font-bold">{category.name}</h1>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-500">{category.description}</p>
+        </header>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {posts.map((post) => <BlogCard key={post.slug} post={post} />)}
+        </div>
+
+        {!posts.length && (
+          <div className="py-20 text-center text-sm text-slate-600">No published research in this category yet.</div>
+        )}
+      </BlogShell>
+    </main>
+  );
+}
+
+
+
+================================================
+FILE: app/genelia-jamesbond-23081211/page.tsx
+================================================
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import LogoutButton from "@/components/LogoutButton";
+{ /* import BirthdayMusic from "@/components/BirthdayMusic"; */}
+
+export default async function ResearchPage() {
+  const cookieStore = await cookies();
+  const role = cookieStore.get("user_role")?.value;
+
+  if (role !== process.env.RESEARCHER_USERNAME) {
+    redirect("/sign-in");
+  }
+
+  return (
+    <main className="birthday-page">
+      { /* <BirthdayMusic /> */ }
+
+      {/* =====================================================
+          FALLING PARTY CONFETTI
+          ===================================================== */}
+
+      <div className="confetti-container" aria-hidden="true">
+        <span className="confetti c1" />
+        <span className="confetti c2" />
+        <span className="confetti c3" />
+        <span className="confetti c4" />
+        <span className="confetti c5" />
+        <span className="confetti c6" />
+        <span className="confetti c7" />
+        <span className="confetti c8" />
+        <span className="confetti c9" />
+        <span className="confetti c10" />
+        <span className="confetti c11" />
+        <span className="confetti c12" />
+        <span className="confetti c13" />
+        <span className="confetti c14" />
+        <span className="confetti c15" />
+        <span className="confetti c16" />
+        <span className="confetti c17" />
+        <span className="confetti c18" />
+        <span className="confetti c19" />
+        <span className="confetti c20" />
+        <span className="confetti c21" />
+        <span className="confetti c22" />
+        <span className="confetti c23" />
+        <span className="confetti c24" />
+        <span className="confetti c25" />
+        <span className="confetti c26" />
+        <span className="confetti c27" />
+        <span className="confetti c28" />
+        <span className="confetti c29" />
+        <span className="confetti c30" />
+      </div>
+
+      {/* =====================================================
+          BALLOONS
+          ===================================================== */}
+
+      <div className="balloon balloon-pink balloon-one" aria-hidden="true">
+        <div className="balloon-string" />
+      </div>
+
+      <div className="balloon balloon-purple balloon-two" aria-hidden="true">
+        <div className="balloon-string" />
+      </div>
+
+      <div className="balloon balloon-peach balloon-three" aria-hidden="true">
+        <div className="balloon-string" />
+      </div>
+
+      <div className="balloon balloon-blue balloon-four" aria-hidden="true">
+        <div className="balloon-string" />
+      </div>
+
+      <div className="balloon balloon-pink balloon-five" aria-hidden="true">
+        <div className="balloon-string" />
+      </div>
+
+      <div className="balloon balloon-yellow balloon-six" aria-hidden="true">
+        <div className="balloon-string" />
+      </div>
+
+      {/* =====================================================
+          SPARKLES
+          ===================================================== */}
+
+      <div className="sparkle sparkle-one" aria-hidden="true">
+        ✦
+      </div>
+
+      <div className="sparkle sparkle-two" aria-hidden="true">
+        ✨
+      </div>
+
+      <div className="sparkle sparkle-three" aria-hidden="true">
+        ✦
+      </div>
+
+      <div className="sparkle sparkle-four" aria-hidden="true">
+        ✨
+      </div>
+
+      {/* =====================================================
+          MAIN BIRTHDAY CONTENT
+          ===================================================== */}
+
+      <div className="birthday-content">
+
+        <div className="small-wish">
+          ✨ A little birthday surprise ✨
+        </div>
+
+        <div className="birthday-emoji">
+          🎂
+        </div>
+
+        <h1>
+          Happy Birthday
+        </h1>
+
+        <div className="birthday-subtitle">
+          Rithicka 💗
+        </div>
+
+        <div className="heart-divider">
+          ♡ &nbsp; ✦ &nbsp; ♡
+        </div>
+
+        <p className="birthday-message">
+          Wishing you a beautiful birthday filled with
+          happiness, laughter, wonderful moments,
+          and everything that makes you smile.
+        </p>
+
+        <p className="birthday-message second">
+          May the year ahead bring you many beautiful
+          memories and plenty of reasons to be happy. 💕
+        </p>
+
+        <div className="birthday-signature">
+          With warm wishes ❤️
+        </div>
+
+        <p className="birthday-message second">
+          Sikirram intha ofc ah vitu relive agidu 
+          Next, Birthday ve Vera Office Celabrate pannuvom. 😄
+        </p>
+
+      </div>
+
+      {/* =====================================================
+          LOGOUT
+          ===================================================== */}
+
+             {/* =====================================================
+          NEXT BIRTHDAY COUNTDOWN
+          ===================================================== */}
+
+      <section className="next-birthday-countdown">
+        <div className="countdown-card">
+
+          <div className="countdown-icon">
+            🎂
+          </div>
+
+          <div className="countdown-label">
+            NEXT BIRTHDAY
+          </div>
+
+          <h2>
+            The Countdown Begins 💗
+          </h2>
+
+          <div
+            id="birthday-countdown"
+            className="countdown-grid"
+          >
+            <div className="countdown-item">
+              <span id="birthday-months">00</span>
+              <small>Months</small>
+            </div>
+
+            <div className="countdown-item">
+              <span id="birthday-days">00</span>
+              <small>Days</small>
+            </div>
+
+            <div className="countdown-item">
+              <span id="birthday-hours">00</span>
+              <small>Hours</small>
+            </div>
+
+            <div className="countdown-item">
+              <span id="birthday-minutes">00</span>
+              <small>Minutes</small>
+            </div>
+
+            <div className="countdown-item">
+              <span id="birthday-seconds">00</span>
+              <small>Seconds</small>
+            </div>
+          </div>
+
+          <p>
+            🎈 Every second brings the next celebration closer 💕
+          </p>
+
+        </div>
+      </section>
+
+      <script
+  dangerouslySetInnerHTML={{
+    __html: `
+      window.addEventListener("load", function () {
+
+        const birthdayMonth = 7;
+        const birthdayDay = 23;
+
+        function getNextBirthday() {
+          const now = new Date();
+
+          let year = now.getFullYear();
+
+          let birthday = new Date(
+            year,
+            birthdayMonth,
+            birthdayDay,
+            0,
+            0,
+            0
+          );
+
+          if (birthday <= now) {
+            birthday = new Date(
+              year + 1,
+              birthdayMonth,
+              birthdayDay,
+              0,
+              0,
+              0
+            );
+          }
+
+          return birthday;
+        }
+
+        const target = getNextBirthday();
+
+        function updateCountdown() {
+
+          const now = new Date();
+
+          let cursor = new Date(now);
+
+          let months = 0;
+
+          while (true) {
+
+            const nextMonth =
+              new Date(cursor);
+
+            nextMonth.setMonth(
+              nextMonth.getMonth() + 1
+            );
+
+            if (nextMonth > target) {
+              break;
+            }
+
+            cursor = nextMonth;
+
+            months++;
+          }
+
+          let remaining =
+            target.getTime() -
+            cursor.getTime();
+
+          const dayMs =
+            1000 * 60 * 60 * 24;
+
+          const hourMs =
+            1000 * 60 * 60;
+
+          const minuteMs =
+            1000 * 60;
+
+          const days =
+            Math.floor(
+              remaining / dayMs
+            );
+
+          remaining %= dayMs;
+
+          const hours =
+            Math.floor(
+              remaining / hourMs
+            );
+
+          remaining %= hourMs;
+
+          const minutes =
+            Math.floor(
+              remaining / minuteMs
+            );
+
+          remaining %= minuteMs;
+
+          const seconds =
+            Math.floor(
+              remaining / 1000
+            );
+
+          const values = {
+            months,
+            days,
+            hours,
+            minutes,
+            seconds
+          };
+
+          Object.entries(values).forEach(
+            ([key, value]) => {
+
+              const element =
+                document.getElementById(
+                  "birthday-" + key
+                );
+
+              if (element) {
+                element.textContent =
+                  String(value).padStart(
+                    2,
+                    "0"
+                  );
+              }
+
+            }
+          );
+        }
+
+        /*
+         * Wait until React hydration has
+         * completed before changing the DOM.
+         */
+        setTimeout(() => {
+
+          updateCountdown();
+
+          window.setInterval(
+            updateCountdown,
+            1000
+          );
+
+        }, 100);
+
+      });
+    `,
+  }}
+/>  
+
+      <div className="logout-wrapper">
+        <LogoutButton />
+      </div>
+
+      {/* =====================================================
+          PAGE-LOCAL CSS
+          ===================================================== */}
+
+      <style>{`
+
+        /* ---------------------------------------------------
+           PAGE
+           --------------------------------------------------- */
+
+        .birthday-page {
+          position: relative;
+          min-height: 100vh;
+          width: 100%;
+          overflow: hidden;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          background:
+            radial-gradient(
+              circle at 50% 35%,
+              rgba(255, 255, 255, 0.9),
+              transparent 35%
+            ),
+            radial-gradient(
+              circle at 15% 20%,
+              rgba(255, 182, 210, 0.8),
+              transparent 30%
+            ),
+            radial-gradient(
+              circle at 85% 75%,
+              rgba(220, 190, 255, 0.55),
+              transparent 32%
+            ),
+            linear-gradient(
+              135deg,
+              #ffd9e8 0%,
+              #ffeaf2 35%,
+              #fff3f7 65%,
+              #f8e6ff 100%
+            );
+
+          color: #6b3150;
+        }
+
+
+        /* ---------------------------------------------------
+           SOFT GLOW
+           --------------------------------------------------- */
+
+        .birthday-page::before {
+          content: "";
+          position: absolute;
+          width: 700px;
+          height: 700px;
+
+          left: 50%;
+          top: 50%;
+
+          transform: translate(-50%, -50%);
+
+          border-radius: 50%;
+
+          background:
+            radial-gradient(
+              circle,
+              rgba(255, 255, 255, 0.8),
+              rgba(255, 255, 255, 0)
+            );
+
+          pointer-events: none;
+        }
+
+
+        /* ---------------------------------------------------
+           MAIN CONTENT
+           --------------------------------------------------- */
+
+        .birthday-content {
+          position: relative;
+          z-index: 10;
+
+          width: min(90%, 760px);
+
+          padding: 60px 35px;
+
+          text-align: center;
+
+          border-radius: 36px;
+
+          background:
+            rgba(255, 255, 255, 0.55);
+
+          border:
+            1px solid rgba(255, 255, 255, 0.8);
+
+          box-shadow:
+            0 30px 80px rgba(174, 87, 125, 0.16),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+
+          animation: cardAppear 1.2s ease-out both;
+        }
+
+
+        @keyframes cardAppear {
+          from {
+            opacity: 0;
+            transform: translateY(25px) scale(0.97);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+
+        /* ---------------------------------------------------
+           SMALL HEADER
+           --------------------------------------------------- */
+
+        .small-wish {
+          margin-bottom: 18px;
+
+          color: #c15d88;
+
+          font-size: 13px;
+          font-weight: 600;
+
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+        }
+
+
+        /* ---------------------------------------------------
+           CAKE
+           --------------------------------------------------- */
+
+        .birthday-emoji {
+          font-size: 55px;
+
+          margin-bottom: 10px;
+
+          animation:
+            cakeBounce 2.5s ease-in-out infinite;
+        }
+
+
+        @keyframes cakeBounce {
+          0%,
+          100% {
+            transform: translateY(0) rotate(-2deg);
+          }
+
+          50% {
+            transform: translateY(-8px) rotate(2deg);
+          }
+        }
+
+
+        /* ---------------------------------------------------
+           HEADING
+           --------------------------------------------------- */
+
+        .birthday-content h1 {
+          margin: 0;
+
+          font-family:
+            Georgia,
+            "Times New Roman",
+            serif;
+
+          font-size: clamp(48px, 9vw, 92px);
+
+          line-height: 0.95;
+
+          font-weight: 700;
+
+          letter-spacing: -0.04em;
+
+          background:
+            linear-gradient(
+              135deg,
+              #d44d80,
+              #e879a3,
+              #b66de2,
+              #d44d80
+            );
+
+          background-size: 250% 250%;
+
+          -webkit-background-clip: text;
+          background-clip: text;
+
+          color: transparent;
+
+          animation:
+            titleGradient 6s ease infinite,
+            titleAppear 1.4s ease-out both;
+        }
+
+
+        @keyframes titleGradient {
+          0% {
+            background-position: 0% 50%;
+          }
+
+          50% {
+            background-position: 100% 50%;
+          }
+
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+
+
+        @keyframes titleAppear {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+
+        /* ---------------------------------------------------
+           SUBTITLE
+           --------------------------------------------------- */
+
+        .birthday-subtitle {
+          margin-top: 10px;
+
+          color: #a74f78;
+
+          font-family:
+            Georgia,
+            "Times New Roman",
+            serif;
+
+          font-size: clamp(30px, 5vw, 46px);
+
+          font-style: italic;
+
+          animation:
+            subtitleAppear 1.8s ease-out both;
+        }
+
+
+        @keyframes subtitleAppear {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+
+        /* ---------------------------------------------------
+           DIVIDER
+           --------------------------------------------------- */
+
+        .heart-divider {
+          margin: 25px 0;
+
+          color: #e27ba5;
+
+          font-size: 18px;
+
+          letter-spacing: 0.25em;
+        }
+
+
+        /* ---------------------------------------------------
+           MESSAGE
+           --------------------------------------------------- */
+
+        .birthday-message {
+          max-width: 590px;
+
+          margin: 0 auto;
+
+          color: #75475b;
+
+          font-size: 17px;
+
+          line-height: 1.9;
+
+          animation:
+            messageAppear 2s ease-out both;
+        }
+
+        .birthday-message.second {
+          margin-top: 15px;
+
+          animation-delay: 0.3s;
+        }
+
+
+        @keyframes messageAppear {
+          from {
+            opacity: 0;
+            transform: translateY(15px);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+
+        /* ---------------------------------------------------
+           SIGNATURE
+           --------------------------------------------------- */
+
+        .birthday-signature {
+          margin-top: 30px;
+
+          color: #bd5d88;
+
+          font-family:
+            Georgia,
+            "Times New Roman",
+            serif;
+
+          font-size: 19px;
+
+          font-style: italic;
+        }
+
+
+        /* ---------------------------------------------------
+           BALLOONS
+           --------------------------------------------------- */
+
+        .balloon {
+          position: absolute;
+
+          z-index: 4;
+
+          width: 74px;
+          height: 92px;
+
+          border-radius:
+            50%
+            50%
+            48%
+            48%;
+
+          box-shadow:
+            inset -12px -14px 20px rgba(0, 0, 0, 0.08),
+            inset 12px 10px 20px rgba(255, 255, 255, 0.25),
+            0 12px 30px rgba(174, 87, 125, 0.15);
+
+          animation:
+            balloonFloat 5s ease-in-out infinite;
+        }
+
+
+        .balloon::after {
+          content: "";
+
+          position: absolute;
+
+          left: 50%;
+          bottom: -7px;
+
+          transform: translateX(-50%);
+
+          width: 0;
+          height: 0;
+
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-top: 10px solid currentColor;
+        }
+
+
+        .balloon-string {
+          position: absolute;
+
+          left: 50%;
+          top: 100%;
+
+          width: 1px;
+          height: 170px;
+
+          background:
+            rgba(119, 76, 99, 0.35);
+
+          transform-origin: top;
+
+          animation:
+            stringMove 4s ease-in-out infinite;
+        }
+
+
+        .balloon-pink {
+          background:
+            radial-gradient(
+              circle at 30% 25%,
+              #fff0f6,
+              #f98fb9 30%,
+              #e85b92 75%,
+              #cf3f79
+            );
+
+          color: #cf3f79;
+        }
+
+
+        .balloon-purple {
+          background:
+            radial-gradient(
+              circle at 30% 25%,
+              #f8efff,
+              #c79bea 30%,
+              #a56bd3 75%,
+              #8c52c4
+            );
+
+          color: #8c52c4;
+        }
+
+
+        .balloon-peach {
+          background:
+            radial-gradient(
+              circle at 30% 25%,
+              #fff6ec,
+              #ffbd8a 30%,
+              #f39461 75%,
+              #e8784c
+            );
+
+          color: #e8784c;
+        }
+
+
+        .balloon-blue {
+          background:
+            radial-gradient(
+              circle at 30% 25%,
+              #effcff,
+              #9de7f0 30%,
+              #63cbd9 75%,
+              #3eafc0
+            );
+
+          color: #3eafc0;
+        }
+
+
+        .balloon-yellow {
+          background:
+            radial-gradient(
+              circle at 30% 25%,
+              #fffdea,
+              #ffe58c 30%,
+              #f5c94f 75%,
+              #e2ad2d
+            );
+
+          color: #e2ad2d;
+        }
+
+
+        .balloon-one {
+          left: 5%;
+          top: 17%;
+
+          animation-delay: 0s;
+        }
+
+
+        .balloon-two {
+          left: 14%;
+          bottom: 5%;
+
+          transform: scale(0.85);
+
+          animation-delay: 1.2s;
+        }
+
+
+        .balloon-three {
+          right: 8%;
+          top: 14%;
+
+          transform: scale(0.9);
+
+          animation-delay: 0.7s;
+        }
+
+
+        .balloon-four {
+          right: 16%;
+          bottom: 8%;
+
+          transform: scale(0.78);
+
+          animation-delay: 1.8s;
+        }
+
+
+        .balloon-five {
+          left: 27%;
+          top: 5%;
+
+          transform: scale(0.62);
+
+          animation-delay: 2s;
+        }
+
+
+        .balloon-six {
+          right: 28%;
+          top: 7%;
+
+          transform: scale(0.65);
+
+          animation-delay: 2.7s;
+        }
+
+
+        @keyframes balloonFloat {
+          0%,
+          100% {
+            margin-top: 0;
+            transform: translateY(0) rotate(-3deg);
+          }
+
+          50% {
+            margin-top: -18px;
+            transform: translateY(-8px) rotate(4deg);
+          }
+        }
+
+
+        @keyframes stringMove {
+          0%,
+          100% {
+            transform: rotate(2deg);
+          }
+
+          50% {
+            transform: rotate(-3deg);
+          }
+        }
+
+
+        /* ---------------------------------------------------
+           CONFETTI
+           --------------------------------------------------- */
+
+        .confetti-container {
+          position: absolute;
+
+          inset: 0;
+
+          z-index: 8;
+
+          overflow: hidden;
+
+          pointer-events: none;
+        }
+
+
+        .confetti {
+          position: absolute;
+
+          top: -30px;
+
+          width: 9px;
+          height: 15px;
+
+          border-radius: 2px;
+
+          animation:
+            confettiFall linear infinite;
+        }
+
+
+        .confetti:nth-child(3n) {
+          border-radius: 50%;
+        }
+
+
+        .c1 {
+          left: 3%;
+          background: #f45d9a;
+          animation-duration: 4.2s;
+          animation-delay: 0s;
+        }
+
+        .c2 {
+          left: 8%;
+          background: #8f6de0;
+          animation-duration: 5.3s;
+          animation-delay: 0.8s;
+        }
+
+        .c3 {
+          left: 13%;
+          background: #ffd45c;
+          animation-duration: 4.8s;
+          animation-delay: 1.4s;
+        }
+
+        .c4 {
+          left: 18%;
+          background: #61cbd8;
+          animation-duration: 5.8s;
+          animation-delay: 0.2s;
+        }
+
+        .c5 {
+          left: 23%;
+          background: #ef7ca9;
+          animation-duration: 4.5s;
+          animation-delay: 1.9s;
+        }
+
+        .c6 {
+          left: 28%;
+          background: #b879df;
+          animation-duration: 6s;
+          animation-delay: 0.4s;
+        }
+
+        .c7 {
+          left: 33%;
+          background: #ffbd71;
+          animation-duration: 4.9s;
+          animation-delay: 2.2s;
+        }
+
+        .c8 {
+          left: 38%;
+          background: #f45d9a;
+          animation-duration: 5.5s;
+          animation-delay: 0.7s;
+        }
+
+        .c9 {
+          left: 43%;
+          background: #62cbd7;
+          animation-duration: 4.7s;
+          animation-delay: 1.5s;
+        }
+
+        .c10 {
+          left: 48%;
+          background: #a779df;
+          animation-duration: 5.9s;
+          animation-delay: 0.1s;
+        }
+
+        .c11 {
+          left: 53%;
+          background: #ffd45c;
+          animation-duration: 4.4s;
+          animation-delay: 2s;
+        }
+
+        .c12 {
+          left: 58%;
+          background: #ef719e;
+          animation-duration: 5.2s;
+          animation-delay: 0.5s;
+        }
+
+        .c13 {
+          left: 63%;
+          background: #61cbd8;
+          animation-duration: 6.1s;
+          animation-delay: 1.7s;
+        }
+
+        .c14 {
+          left: 68%;
+          background: #b879df;
+          animation-duration: 4.6s;
+          animation-delay: 0.3s;
+        }
+
+        .c15 {
+          left: 73%;
+          background: #ffbe6f;
+          animation-duration: 5.7s;
+          animation-delay: 1.1s;
+        }
+
+        .c16 {
+          left: 78%;
+          background: #f45d9a;
+          animation-duration: 4.8s;
+          animation-delay: 2.3s;
+        }
+
+        .c17 {
+          left: 83%;
+          background: #63cbd9;
+          animation-duration: 5.4s;
+          animation-delay: 0.6s;
+        }
+
+        .c18 {
+          left: 88%;
+          background: #9f70dc;
+          animation-duration: 6.2s;
+          animation-delay: 1.3s;
+        }
+
+        .c19 {
+          left: 93%;
+          background: #ffd45c;
+          animation-duration: 4.5s;
+          animation-delay: 0.9s;
+        }
+
+        .c20 {
+          left: 97%;
+          background: #ef719e;
+          animation-duration: 5.6s;
+          animation-delay: 2.1s;
+        }
+
+        .c21 {
+          left: 6%;
+          background: #ffd45c;
+          animation-duration: 6.5s;
+          animation-delay: 3s;
+        }
+
+        .c22 {
+          left: 20%;
+          background: #61cbd8;
+          animation-duration: 5.1s;
+          animation-delay: 3.2s;
+        }
+
+        .c23 {
+          left: 35%;
+          background: #ef719e;
+          animation-duration: 6.3s;
+          animation-delay: 2.7s;
+        }
+
+        .c24 {
+          left: 50%;
+          background: #a779df;
+          animation-duration: 5.4s;
+          animation-delay: 3.5s;
+        }
+
+        .c25 {
+          left: 65%;
+          background: #ffbe6f;
+          animation-duration: 6.4s;
+          animation-delay: 2.8s;
+        }
+
+        .c26 {
+          left: 76%;
+          background: #61cbd8;
+          animation-duration: 5.3s;
+          animation-delay: 3.7s;
+        }
+
+        .c27 {
+          left: 86%;
+          background: #f45d9a;
+          animation-duration: 6.1s;
+          animation-delay: 2.5s;
+        }
+
+        .c28 {
+          left: 91%;
+          background: #ffd45c;
+          animation-duration: 5.8s;
+          animation-delay: 3.1s;
+        }
+
+        .c29 {
+          left: 44%;
+          background: #ef719e;
+          animation-duration: 6.6s;
+          animation-delay: 4s;
+        }
+
+        .c30 {
+          left: 57%;
+          background: #8f6de0;
+          animation-duration: 5.9s;
+          animation-delay: 3.4s;
+        }
+
+
+        @keyframes confettiFall {
+          0% {
+            transform:
+              translateY(-40px)
+              rotate(0deg)
+              translateX(0);
+
+            opacity: 0;
+          }
+
+          8% {
+            opacity: 1;
+          }
+
+          25% {
+            transform:
+              translateY(25vh)
+              rotate(140deg)
+              translateX(25px);
+          }
+
+          50% {
+            transform:
+              translateY(50vh)
+              rotate(280deg)
+              translateX(-25px);
+          }
+
+          75% {
+            transform:
+              translateY(75vh)
+              rotate(430deg)
+              translateX(25px);
+          }
+
+          100% {
+            transform:
+              translateY(110vh)
+              rotate(600deg)
+              translateX(-15px);
+
+            opacity: 0;
+          }
+        }
+
+
+        /* ---------------------------------------------------
+           SPARKLES
+           --------------------------------------------------- */
+
+        .sparkle {
+          position: absolute;
+
+          z-index: 6;
+
+          color: #ffffff;
+
+          text-shadow:
+            0 0 12px rgba(255, 255, 255, 0.9),
+            0 0 25px rgba(255, 122, 174, 0.6);
+
+          animation:
+            sparkleAnimation 2.5s ease-in-out infinite;
+        }
+
+
+        .sparkle-one {
+          top: 24%;
+          left: 23%;
+          font-size: 22px;
+          animation-delay: 0.2s;
+        }
+
+
+        .sparkle-two {
+          top: 28%;
+          right: 23%;
+          font-size: 25px;
+          animation-delay: 0.8s;
+        }
+
+
+        .sparkle-three {
+          bottom: 25%;
+          left: 20%;
+          font-size: 17px;
+          animation-delay: 1.4s;
+        }
+
+
+        .sparkle-four {
+          bottom: 22%;
+          right: 20%;
+          font-size: 21px;
+          animation-delay: 1.9s;
+        }
+
+
+        @keyframes sparkleAnimation {
+          0%,
+          100% {
+            opacity: 0.25;
+            transform: scale(0.7) rotate(0deg);
+          }
+
+          50% {
+            opacity: 1;
+            transform: scale(1.25) rotate(20deg);
+          }
+        }
+
+
+        /* ---------------------------------------------------
+           LOGOUT
+           --------------------------------------------------- */
+
+        .logout-wrapper {
+          position: absolute;
+
+          z-index: 30;
+
+          top: 22px;
+          right: 24px;
+        }
+
+
+        /* ---------------------------------------------------
+           MOBILE
+           --------------------------------------------------- */
+
+        @media (max-width: 640px) {
+
+          .birthday-content {
+            padding: 45px 22px;
+            border-radius: 26px;
+          }
+
+          .birthday-emoji {
+            font-size: 45px;
+          }
+
+          .birthday-message {
+            font-size: 15px;
+            line-height: 1.8;
+          }
+
+          .balloon {
+            width: 48px;
+            height: 62px;
+          }
+
+          .balloon-string {
+            height: 100px;
+          }
+
+          .balloon-five,
+          .balloon-six {
+            display: none;
+          }
+
+          .sparkle-one {
+            left: 8%;
+          }
+
+          .sparkle-two {
+            right: 8%;
+          }
+
+          .sparkle-three {
+            left: 8%;
+          }
+
+          .sparkle-four {
+            right: 8%;
+          }
+
+          .logout-wrapper {
+            top: 16px;
+            right: 16px;
+          }
+        }
+
+
+        /* ---------------------------------------------------
+           REDUCED MOTION
+           --------------------------------------------------- */
+
+        @media (prefers-reduced-motion: reduce) {
+
+          .birthday-page *,
+          .birthday-page::before {
+            animation: none !important;
+          }
+
+        }
+
+        /* ---------------------------------------------------
+   NEXT BIRTHDAY COUNTDOWN
+   --------------------------------------------------- */
+
+.next-birthday-countdown {
+  position: relative;
+  z-index: 12;
+
+  width: min(90%, 850px);
+
+  margin: 40px auto 90px;
+
+  padding: 0 20px;
+}
+
+
+.countdown-card {
+  padding: 35px 25px;
+
+  text-align: center;
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.82),
+      rgba(255, 232, 244, 0.88)
+    );
+
+  border:
+    1px solid rgba(255, 255, 255, 0.9);
+
+  box-shadow:
+    0 20px 55px rgba(174, 87, 125, 0.13);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+
+.countdown-icon {
+  font-size: 40px;
+
+  margin-bottom: 5px;
+}
+
+
+.countdown-label {
+  color: #c15d88;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.25em;
+
+  text-transform: uppercase;
+}
+
+
+.countdown-card h2 {
+  margin-top: 8px;
+
+  color: #a74f78;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(24px, 4vw, 34px);
+
+  font-weight: 700;
+}
+
+
+.countdown-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, 1fr);
+
+  gap: 12px;
+
+  margin-top: 25px;
+}
+
+
+.countdown-item {
+  padding: 18px 8px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(255, 255, 255, 0.72);
+
+  border:
+    1px solid rgba(249, 168, 212, 0.45);
+
+  box-shadow:
+    0 8px 20px
+    rgba(174, 87, 125, 0.07);
+}
+
+
+.countdown-item span {
+  display: block;
+
+  color: #d44d80;
+
+  font-size:
+    clamp(25px, 5vw, 40px);
+
+  font-weight: 800;
+
+  line-height: 1;
+}
+
+
+.countdown-item small {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #bd5d88;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+}
+
+
+.countdown-card p {
+  margin-top: 22px;
+
+  color: #c15d88;
+
+  font-size: 13px;
+}
+
+
+@media (max-width: 640px) {
+
+  .next-birthday-countdown {
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 0 14px;
+  }
+
+
+  .countdown-card {
+    padding: 28px 14px;
+
+    border-radius: 24px;
+  }
+
+
+  .countdown-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    gap: 9px;
+  }
+
+
+  .countdown-item:last-child {
+    grid-column: 1 / -1;
+
+    width: 50%;
+
+    margin: 0 auto;
+  }
+
+}  
+
+      `}</style>
+    </main>
+  );
+}
+
+
+================================================
+FILE: app/portfolio/page.tsx
+================================================
+import Link from "next/link";
+import { Badge } from "@/components/ui/Badge";
+
+const expertise = [
+  "Web Application Security",
+  "API Security",
+  "Android Security",
+  "iOS Security",
+  "Source Code Review",
+  "Reverse Engineering",
+  "Cloud Security",
+  "AI Security",
+  "Network Security",
+  "DevSecOps",
+];
+
+const domains = [
+  {
+    number: "01",
+    title: "Web Security",
+    href: "/category/web",
+    description:
+      "Application security testing, authentication, authorization, session management, business logic and OWASP-based assessments.",
+    tags: ["OWASP", "Burp Suite", "Nuclei"],
+  },
+  {
+    number: "02",
+    title: "API Security",
+    href: "/category/api",
+    description:
+      "REST API assessment, authorization testing, IDOR, JWT analysis, rate limiting and business logic testing.",
+    tags: ["REST", "JWT", "Postman"],
+  },
+  {
+    number: "03",
+    title: "Android Security",
+    href: "/category/android",
+    description:
+      "Static and dynamic analysis of Android applications, runtime instrumentation, SSL pinning and root detection analysis.",
+    tags: ["Frida", "JADX", "MobSF"],
+  },
+  {
+    number: "04",
+    title: "iOS Security",
+    href: "/category/ios",
+    description:
+      "iOS application analysis, runtime instrumentation, certificate validation analysis and binary inspection.",
+    tags: ["Frida", "LLDB", "MobSF"],
+  },
+  {
+    number: "05",
+    title: "Reverse Engineering",
+    href: "/category/reverse-engineering",
+    description:
+      "Binary analysis, native library analysis, application instrumentation and understanding custom security controls.",
+    tags: ["Ghidra", "Frida", "JADX"],
+  },
+  {
+    number: "06",
+    title: "Cloud Security",
+    href: "/category/cloud-security",
+    description:
+      "AWS security assessment covering IAM, storage, networking, compute and cloud infrastructure configurations.",
+    tags: ["AWS", "Terraform", "CloudGoat"],
+  },
+  {
+    number: "07",
+    title: "AI Security",
+    href: "/category/ai-security",
+    description:
+      "Security testing of LLM applications, agents, prompts, tools and application-level AI attack surfaces.",
+    tags: ["LLM", "Agents", "OWASP"],
+  },
+  {
+    number: "08",
+    title: "Network Security",
+    href: "/category/network-security",
+    description:
+      "Network reconnaissance, service enumeration, traffic analysis and application communication testing.",
+    tags: ["Nmap", "Wireshark", "iptables"],
+  },
+];
+
+const tools = {
+  "Application Security": [
+    "Burp Suite",
+    "CAIDO",
+    "Nuclei",
+    "ffuf",
+    "Gobuster",
+    "HTTPX",
+    "WhatWeb",
+    "ZAP",
+  ],
+  "Mobile Security": [
+    "Frida",
+    "Objection",
+    "MobSF",
+    "JADX",
+    "APKTool",
+    "ReFlutter",
+    "Magisk",
+  ],
+  "Reverse Engineering": [
+    "Ghidra",
+    "IDA",
+    "LLDB",
+    "Frida",
+    "strings",
+    "objdump",
+    "Binary Ninja",
+  ],
+  "Cloud & Infrastructure": [
+    "TruffleHog",
+    "Terraform",
+    "CloudGoat",
+    "Docker",
+    "git-secrets",
+    "native tools",
+  ],
+  "Development & DevSecOps": [
+    "Python",
+    "Java",
+    "Go",
+    "TypeScript",
+    "Jenkins",
+    "Semgrep",
+    "SonarQube",
+  ],
+  "AI Security": [
+    "Promptfoo",
+    "Giskard",
+    "Lakera Guardian",
+  ],
+};
+export default function PortfolioPage() {
+  return (
+    <main className="min-h-screen bg-[#05080c] text-slate-100">
+      {/* HERO */}
+      <section className="relative overflow-hidden border-b border-white/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,rgba(56,217,230,0.08),transparent_35%)]" />
+
+        <div className="relative mx-auto max-w-7xl px-5 pb-24 pt-20 lg:px-8 lg:pb-32 lg:pt-28">
+          <div className="grid gap-16 lg:grid-cols-[1.5fr_0.5fr] lg:items-end">
+            <div>
+              <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.25em] text-[#38D9E6]">
+                # Security Engineer
+              </div>
+
+              <h1 className="mt-7 max-w-5xl text-5xl font-bold leading-[0.95] tracking-[-0.05em] sm:text-6xl lg:text-8xl">
+                Breaking applications
+                <span className="block text-slate-500">
+                  to understand how they fail.
+                </span>
+              </h1>
+
+              <p className="mt-8 max-w-2xl text-base leading-8 text-slate-400 md:text-lg">
+                Application security engineer focused on Web, API, Android,
+                iOS, reverse engineering, cloud security, AI security and security research.
+              </p>
+
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  href="/sign-in"
+                  className="inline-flex items-center rounded-lg bg-[#38D9E6] px-5 py-3 text-sm font-semibold text-[#041014] transition hover:translate-y-[-2px] hover:bg-[#65e5ee]"
+                >
+                  Explore my work
+                  <span className="ml-3">↓</span>
+                </Link>
+
+                <Link
+                  href="/blog"
+                  className="inline-flex items-center rounded-lg border border-white/10 px-5 py-3 text-sm font-medium text-slate-300 transition hover:border-white/20 hover:bg-white/[0.03]"
+                >
+                  Read research
+                </Link>
+              </div>
+            </div>
+
+            <div className="hidden lg:block">
+              <div className="border-l border-white/10 pl-7">
+                <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-slate-600">
+                  Focus Areas
+                </div>
+
+                <div className="mt-5 space-y-3 font-mono text-sm text-slate-400">
+                  <div>WEB / API</div>
+                  <div>ANDROID / iOS</div>
+                  <div>REVERSE ENGINEERING</div>
+                  <div>CLOUD SECURITY</div>
+                  <div>AI SECURITY</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* EXPERTISE */}
+      <section className="border-b border-white/10">
+        <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="font-mono text-xs uppercase tracking-[0.2em] text-slate-600">
+              Expertise
+            </div>
+
+            <div className="flex max-w-5xl flex-wrap gap-2">
+              {expertise.map((item) => (
+                <Badge key={item}>{item}</Badge>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECURITY DOMAINS */}
+      <section className="mx-auto max-w-7xl px-5 py-24 lg:px-8 lg:py-32">
+        <div className="max-w-2xl">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#38D9E6]">
+            Security Domains
+          </p>
+
+          <h2 className="mt-4 text-3xl font-bold tracking-[-0.03em] md:text-5xl">
+            Areas of security research
+          </h2>
+
+          <p className="mt-5 leading-7 text-slate-500">
+            A practical security focus across application, mobile,
+            infrastructure and emerging AI attack surfaces.
+          </p>
+        </div>
+
+        <div className="mt-14 grid border-l border-t border-white/10 md:grid-cols-2 lg:grid-cols-4">
+          {domains.map((domain) => (
+  <Link
+    key={domain.number}
+    href={domain.href}
+    className="group min-h-[280px] border-b border-r border-white/10 p-6 transition hover:bg-white/[0.025] lg:p-7"
+  >
+    <div className="flex items-center justify-between">
+      <span className="font-mono text-xs text-[#38D9E6]">
+        {domain.number}
+      </span>
+
+      <span className="text-slate-700 transition group-hover:text-[#38D9E6]">
+        ↗
+      </span>
+    </div>
+
+    <h3 className="mt-12 text-xl font-semibold">
+      {domain.title}
+    </h3>
+
+    <p className="mt-4 text-sm leading-6 text-slate-500">
+      {domain.description}
+    </p>
+
+    <div className="mt-6 flex flex-wrap gap-2">
+      {domain.tags.map((tag) => (
+        <span
+          key={tag}
+          className="font-mono text-[10px] uppercase tracking-wider text-slate-600"
+        >
+          {tag}
+        </span>
+      ))}
+    </div>
+  </Link>
+))}
+        </div>
+      </section>
+      
+      {/* TOOLS */}
+      <section className="mx-auto max-w-7xl px-5 py-24 lg:px-8 lg:py-32">
+        <div className="max-w-2xl">
+          <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#38D9E6]">
+            Toolkit
+          </p>
+
+          <h2 className="mt-4 text-3xl font-bold tracking-[-0.03em] md:text-5xl">
+            Tools I work with
+          </h2>
+        </div>
+
+        <div className="mt-14 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:grid-cols-2 lg:grid-cols-3">
+          {Object.entries(tools).map(([category, items]) => (
+            <div key={category} className="bg-[#070b10] p-7">
+              <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-slate-400">
+                {category}
+              </h3>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {items.map((tool) => (
+                  <span
+                    key={tool}
+                    className="rounded-md border border-white/10 bg-white/[0.02] px-3 py-2 font-mono text-xs text-slate-500"
+                  >
+                    {tool}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* EXPERIENCE */}
+      <section className="border-t border-white/10">
+        <div className="mx-auto max-w-7xl px-5 py-24 lg:px-8 lg:py-32">
+          <div className="grid gap-12 lg:grid-cols-[0.6fr_1.4fr]">
+            <div>
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#38D9E6]">
+                Experience
+              </p>
+
+              <h2 className="mt-4 text-3xl font-bold tracking-[-0.03em] md:text-5xl">
+                Security Engineering
+              </h2>
+            </div>
+
+            <div className="border-l border-[#38D9E6]/30 pl-7">
+              <div className="font-mono text-xs uppercase tracking-[0.15em] text-[#38D9E6]">
+                Application & Product Security
+              </div>
+
+              <h3 className="mt-4 text-2xl font-semibold">
+                Security Engineer
+              </h3>
+
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-500">
+                Experience across web application security, API assessments,
+                Android and iOS security testing, source code review,
+                vulnerability research, security automation and secure SDLC
+                practices.
+              </p>
+
+              <div className="mt-7 flex flex-wrap gap-2">
+                {[
+                  "Web",
+                  "API",
+                  "Android",
+                  "iOS",
+                  "Cloud",
+                  "Source Review",
+                  "DevSecOps",
+                  "AI Security",
+                ].map((item) => (
+                  <Badge key={item}>{item}</Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CONTACT */}
+      <section className="border-t border-white/10 bg-[#070b10]">
+        <div className="mx-auto max-w-7xl px-5 py-24 lg:px-8 lg:py-32">
+          <div className="max-w-3xl">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-[#38D9E6]">
+              Contact
+            </p>
+
+            <h2 className="mt-5 text-4xl font-bold tracking-[-0.04em] md:text-6xl">
+              Interested in security research?
+            </h2>
+
+            <p className="mt-6 max-w-xl leading-7 text-slate-500">
+              Security engineering, research, collaboration or technical
+              discussions.
+            </p>
+
+            <div className="mt-9 flex flex-wrap gap-3">
+              <a
+                href="https://github.com/moolakarapasanga"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg border border-white/10 px-5 py-3 text-sm text-slate-300 transition hover:border-[#38D9E6]/40 hover:text-[#38D9E6]"
+              >
+                GitHub ↗
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/smartsunil"
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg border border-white/10 px-5 py-3 text-sm text-slate-300 transition hover:border-[#38D9E6]/40 hover:text-[#38D9E6]"
+              >
+                LinkedIn ↗
+              </a>
+
+              <a
+                href="mailto:assunil07@gmail.com"
+                className="rounded-lg bg-[#38D9E6] px-5 py-3 text-sm font-semibold text-[#041014] transition hover:bg-[#65e5ee]"
+              >
+                Contact me
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+
+================================================
+FILE: app/sign-in/page.tsx
+================================================
+"use client";
+
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function SignInPage() {
+  const router = useRouter();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Invalid username or password");
+        return;
+      }
+
+      if (data.success && data.redirectTo) {
+        router.push(data.redirectTo);
+        router.refresh();
+      } else {
+        setError("Login failed");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <main className="grid min-h-[calc(100vh-64px)] place-items-center px-5 py-20">
+      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.02] p-8 shadow-2xl">
+
+        {/* Header */}
+        <div>
+          <div className="font-mono text-xs uppercase tracking-[0.25em] text-[#38D9E6]">
+            Private Area
+          </div>
+
+          <h1 className="mt-3 text-3xl font-semibold text-white">
+            Sign In
+          </h1>
+
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            Enter your credentials to continue.
+          </p>
+        </div>
+
+        {/* Login Form */}
+        <form
+          onSubmit={handleLogin}
+          className="mt-8 space-y-5"
+        >
+
+          {/* Username */}
+          <div>
+            <label
+              htmlFor="username"
+              className="mb-2 block text-sm text-slate-400"
+            >
+              Username
+            </label>
+
+            <input
+              id="username"
+              name="username"
+              type="text"
+              autoComplete="username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              placeholder="Enter username"
+              disabled={loading}
+              required
+              className="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-3 text-sm text-white placeholder:text-slate-700 outline-none transition focus:border-[#38D9E6]/50 focus:ring-1 focus:ring-[#38D9E6]/20 disabled:cursor-not-allowed disabled:opacity-50"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label
+              htmlFor="password"
+              className="mb-2 block text-sm text-slate-400"
+            >
+              Password
+            </label>
+
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Enter password"
+              disabled={loading}
+              required
+              className="w-full rounded-lg border border-white/10 bg-black/20 px-4 py-3 text-sm text-white placeholder:text-slate-700 outline-none transition focus:border-[#38D9E6]/50 focus:ring-1 focus:ring-[#38D9E6]/20 disabled:cursor-not-allowed disabled:opacity-50"
+            />
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div
+              role="alert"
+              className="rounded-lg border border-red-400/20 bg-red-400/5 px-4 py-3 text-sm text-red-300"
+            >
+              {error}
+            </div>
+          )}
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-lg bg-white px-4 py-3 text-sm font-semibold text-black transition hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {loading ? "Authenticating..." : "Sign In"}
+          </button>
+        </form>
+
+        {/* Footer */}
+         { /*<div className="mt-6 border-t border-white/10 pt-5">
+          <p className="text-center font-mono text-[11px] text-slate-700">
+           AUTHENTICATED ACCESS
+          </p>
+        </div> */}
+      </div>
+    </main>
+  );
+}
+
+
+================================================
+FILE: app/testing/page.tsx
+================================================
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import LogoutButton from "@/components/LogoutButton";
+
+export default async function TestingPage() {
+  const cookieStore = await cookies();
+  const role = cookieStore.get("user_role")?.value;
+
+  if (role !== process.env.ADMIN_USERNAME) {
+    redirect("/sign-in");
+  }
+
+  return (
+    <main className="min-h-[calc(100vh-64px)] px-5 py-20">
+      <div className="mx-auto max-w-6xl">
+
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-6">
+
+          <div>
+            <div className="font-mono text-xs uppercase tracking-[0.25em] text-[#38d9e6]">
+              Private Area
+            </div>
+
+            <h1 className="mt-3 text-4xl font-bold text-white">
+              Testing...
+            </h1>
+          </div>
+
+          {/* Logout */}
+          <LogoutButton />
+
+        </div>
+
+      </div>
+    </main>
+  );
+}
+
+
+================================================
+FILE: components/BirthdayMusic.tsx
+================================================
+"use client";
+
+import { useRef, useState } from "react";
+
+export default function BirthdayMusic() {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+
+  async function toggleMusic() {
+    if (!audioRef.current) return;
+
+    if (playing) {
+      audioRef.current.pause();
+      setPlaying(false);
+      return;
+    }
+
+    try {
+      await audioRef.current.play();
+      setPlaying(true);
+    } catch (error) {
+      console.error("Unable to play birthday music:", error);
+    }
+  }
+
+  return (
+    <>
+      <audio
+        ref={audioRef}
+        src="/happy-fixed.mp3"
+        loop
+        preload="auto"
+      />
+
+      <button
+        type="button"
+        onClick={toggleMusic}
+        className="music-button"
+      >
+        {playing ? "🔊 Birthday Music" : "🎵 Play Birthday Music"}
+      </button>
+
+      <style>{`
+        .music-button {
+          position: fixed;
+          left: 24px;
+          bottom: 24px;
+          z-index: 50;
+
+          padding: 10px 16px;
+          border-radius: 999px;
+
+          border: 1px solid rgba(255, 255, 255, 0.7);
+
+          background: rgba(255, 255, 255, 0.65);
+
+          color: #a74f78;
+
+          font-size: 13px;
+          font-weight: 600;
+
+          box-shadow:
+            0 10px 30px rgba(174, 87, 125, 0.15);
+
+          backdrop-filter: blur(10px);
+
+          cursor: pointer;
+
+          transition:
+            transform 0.2s ease,
+            background 0.2s ease;
+        }
+
+        .music-button:hover {
+          transform: translateY(-2px);
+          background: rgba(255, 255, 255, 0.9);
+        }
+
+        @media (max-width: 640px) {
+          .music-button {
+            left: 16px;
+            bottom: 16px;
+          }
+        }
+      `}</style>
+    </>
+  );
+}
+
+
+================================================
+FILE: components/LogoutButton.tsx
+================================================
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+export default function LogoutButton() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  async function handleLogout() {
+    setLoading(true);
+
+    try {
+      await fetch("/api/logout", {
+        method: "POST",
+      });
+
+      router.push("/sign-in");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed:", error);
+
+      // Even if the request fails, return to sign-in.
+      router.push("/sign-in");
+      router.refresh();
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleLogout}
+      disabled={loading}
+      className="rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-400 transition hover:border-cyan-400/30 hover:bg-cyan-400/5 hover:text-[#38d9e6] disabled:cursor-not-allowed disabled:opacity-50"
+    >
+      {loading ? "Signing out..." : "Logout"}
+    </button>
+  );
+}
+
+
+================================================
+FILE: components/blog/BlogCard.tsx
+================================================
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { Badge } from "@/components/ui/Badge";
+import { formatDate } from "@/lib/utils";
+import type { BlogPost } from "@/types/blog";
+
+export function BlogCard({ post }: { post: BlogPost }) {
+  return (
+    <Link href={`/blog/${post.slug}`} className="group block rounded-xl border border-white/10 bg-white/[.015] p-5 hover:border-white/20 hover:bg-white/[.03]">
+      <div className="flex items-center justify-between gap-3">
+        <Badge>{post.category}</Badge>
+        <ArrowUpRight size={16} className="text-slate-600 group-hover:text-[#38D9E6]" />
+      </div>
+      <h3 className="mt-5 text-lg font-semibold tracking-tight text-white">{post.title}</h3>
+      <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{post.description}</p>
+      <div className="mt-5 flex gap-3 text-xs text-slate-600">
+        <span>{formatDate(post.date)}</span>
+        <span>·</span>
+        <span>{post.readingTime}</span>
+      </div>
+    </Link>
+  );
+}
+
+
+
+================================================
+FILE: components/blog/BlogShell.tsx
+================================================
+ "use client";
+
+import { useState } from "react";
+import { Sidebar, SidebarButton } from "./Sidebar";
+
+export function BlogShell({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <div className="mb-6 flex items-center gap-3 lg:hidden">
+        <SidebarButton onClick={() => setOpen(true)} />
+        <span className="text-sm text-slate-500">Security Topics</span>
+      </div>
+
+      <div className="flex gap-8">
+        <div className="hidden lg:block">
+          <Sidebar />
+        </div>
+        <main className="min-w-0 flex-1">{children}</main>
+      </div>
+
+      {open && (
+        <div className="fixed inset-0 z-50 bg-black/70 lg:hidden" onClick={() => setOpen(false)}>
+          <div onClick={(event) => event.stopPropagation()}>
+            <Sidebar mobile onClose={() => setOpen(false)} />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+
+
+================================================
+FILE: components/blog/Sidebar.tsx
+================================================
+ "use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { categories } from "@/config/categories";
+import { Menu, X } from "lucide-react";
+
+export function Sidebar({ mobile = false, onClose }: { mobile?: boolean; onClose?: () => void }) {
+  const pathname = usePathname();
+
+  return (
+    <aside className={mobile ? "fixed inset-y-0 left-0 z-[60] w-80 border-r border-white/10 bg-[#071014] p-5 shadow-2xl" : "sticky top-24 h-[calc(100vh-7rem)] w-64 shrink-0 border-r border-white/10 pr-5"}>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <div className="font-mono text-xs uppercase tracking-[.2em] text-[#38D9E6]">Security Topics</div>
+          <div className="mt-2 text-xs text-slate-600">Research categories</div>
+        </div>
+        {mobile && (
+          <button onClick={onClose} aria-label="Close sidebar" className="rounded-lg border border-white/10 p-2">
+            <X size={17} />
+          </button>
+        )}
+      </div>
+
+      <nav className="space-y-1">
+        <Link
+          href="/blog"
+          onClick={onClose}
+          className={`block rounded-lg px-3 py-2.5 text-sm ${pathname === "/blog" ? "bg-white/10 text-white" : "text-slate-500 hover:bg-white/5 hover:text-white"}`}
+        >
+          All Research
+        </Link>
+        {categories.map((category) => {
+          const active = pathname.startsWith(`/category/${category.slug}`);
+          return (
+            <Link
+              key={category.slug}
+              href={`/category/${category.slug}`}
+              onClick={onClose}
+              className={`block rounded-lg px-3 py-2.5 text-sm ${active ? "bg-[#38D9E6]/10 text-[#9eeac6]" : "text-slate-500 hover:bg-white/5 hover:text-white"}`}
+            >
+              {category.name}
+            </Link>
+          );
+        })}
+      </nav>
+    </aside>
+  );
+}
+
+export function SidebarButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button onClick={onClick} aria-label="Open sidebar" className="rounded-lg border border-white/10 p-2 text-slate-300 hover:bg-white/5">
+      <Menu size={18} />
+    </button>
+  );
+}
+
+
+
+================================================
+FILE: components/blog/TableOfContents.tsx
+================================================
+ "use client";
+
+import { useEffect, useState } from "react";
+
+export function TableOfContents() {
+  const [headings, setHeadings] = useState<Array<{ id: string; text: string }>>([]);
+
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll("article h2, article h3"));
+    setHeadings(
+      nodes.map((node) => {
+        const id = node.id || node.textContent?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "";
+        node.id = id;
+        return { id, text: node.textContent || "" };
+      })
+    );
+  }, []);
+
+  if (!headings.length) return null;
+
+  return (
+    <nav className="hidden xl:block xl:w-56 xl:shrink-0">
+      <div className="sticky top-24">
+        <div className="font-mono text-[10px] uppercase tracking-[.2em] text-slate-600">Contents</div>
+        <div className="mt-4 space-y-2 border-l border-white/10 pl-4">
+          {headings.map((heading) => (
+            <a key={heading.id} href={`#${heading.id}`} className="block text-xs leading-5 text-slate-500 hover:text-white">
+              {heading.text}
+            </a>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+
+
+================================================
+FILE: components/home/Hero.tsx
+================================================
+export function Hero() {
+  return (
+    <section className="mx-auto flex min-h-[calc(100vh-64px)] max-w-6xl flex-col items-center justify-center px-5 py-24 text-center">
+      <div className="mb-8 font-mono text-xs uppercase tracking-[.3em] text-[#38D9E6]">
+        security-research
+      </div>
+      <h1 className="max-w-4xl text-6xl font-extrabold leading-[.9] tracking-[-.06em] sm:text-7xl md:text-8xl lg:text-[9rem]">
+        <span className="block">Research</span>
+        <span className="block text-slate-500">Thoughts</span>
+        <span className="block">Experiments</span>
+      </h1>
+      <p className="mt-9 max-w-xl text-base leading-7 text-slate-400 sm:text-lg">
+        Security research, application security, reverse engineering and technical experiments.
+      </p>
+    </section>
+  );
+}
+
+
+
+================================================
+FILE: components/home/ResearchAreas.tsx
+================================================
+import Link from "next/link";
+import { categories } from "@/config/categories";
+import { ArrowUpRight } from "lucide-react";
+
+export function ResearchAreas() {
+  return (
+    <section className="mx-auto max-w-6xl px-5 py-24 lg:px-8">
+      <div className="mb-10">
+        <p className="font-mono text-xs uppercase tracking-[.25em] text-[#38D9E6]">01 / Research Areas</p>
+        <h2 className="mt-3 text-3xl font-semibold tracking-tight">What I research</h2>
+      </div>
+      <div className="grid border-l border-t border-white/10 sm:grid-cols-2 lg:grid-cols-3">
+        {categories.map((category) => (
+          <Link
+            key={category.slug}
+            href={`/category/${category.slug}`}
+            className="group flex min-h-32 items-end justify-between border-b border-r border-white/10 p-5 hover:bg-white/[.025]"
+          >
+            <div>
+              <div className="text-base font-medium">{category.name}</div>
+              <p className="mt-2 max-w-xs text-sm text-slate-500">{category.description}</p>
+            </div>
+            <ArrowUpRight size={17} className="text-slate-600 group-hover:text-[#38D9E6]" />
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+
+
+================================================
+FILE: components/home/Terminal.tsx
+================================================
+ "use client";
+
+import { useEffect, useState } from "react";
+
+const lines = [
+  "$ whoami",
+  "Sunil - Security-Researcher",
+  "",
+  "$ ls",
+  "android  ios  web  cloud  api  ai  research",
+  "",
+  "$ cat status.txt",
+  "researching..."
+];
+
+export function Terminal() {
+  const [visible, setVisible] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setVisible((value) => Math.min(value + 1, lines.length));
+    }, 260);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="mx-auto max-w-2xl px-5 pb-28">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#090d12] shadow-2xl shadow-black/30">
+        <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
+          <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
+          <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
+          <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
+          <span className="ml-3 font-mono text-xs text-slate-500">terminal</span>
+        </div>
+        <div className="min-h-72 p-5 font-mono text-sm leading-7 text-slate-300">
+          {lines.slice(0, visible).map((line, index) => (
+            <div key={index} className={line.startsWith("$") ? "text-[#38D9E6]" : ""}>
+              {line || "\u00a0"}
+            </div>
+          ))}
+          <span className="terminal-cursor" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+
+================================================
+FILE: components/layout/Footer.tsx
+================================================
+import Link from "next/link";
+import { siteConfig } from "@/config/site";
+
+export function Footer() {
+  return (
+    <footer className="border-t border-white/10">
+      <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-sm text-slate-500 md:flex-row md:items-center md:justify-between lg:px-8">
+        <div>
+          © {new Date().getFullYear()} {siteConfig.name}
+        </div>
+
+        <div className="flex gap-5">
+          <Link
+            href={siteConfig.links.github}
+            target="_blank"
+            className="hover:text-white"
+          >
+            GitHub
+          </Link>
+
+          <Link
+            href={siteConfig.links.linkedin}
+            target="_blank"
+            className="hover:text-white"
+          >
+            LinkedIn
+          </Link>
+
+          <Link
+            href={siteConfig.links.x}
+            target="_blank"
+            className="hover:text-white"
+          >
+            X
+          </Link>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+
+================================================
+FILE: components/layout/Header.tsx
+================================================
+import Link from "next/link";
+import { MobileNav } from "./MobileNav";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { siteConfig } from "@/config/site";
+
+export function Header() {
+  return (
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#071014]/85 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
+        <Link href="/" className="font-mono text-sm text-white">
+          <span className="mr-1 text-[#38D9E6]">~</span>
+          {siteConfig.name}
+        </Link>
+
+        <nav className="hidden items-center gap-7 text-sm text-slate-400 md:flex">
+          <Link href="/" className="hover:text-white">
+            Home
+          </Link>
+
+          <Link href="/portfolio" className="hover:text-white">
+            Portfolio
+          </Link>
+
+          <Link href="/blog" className="hover:text-white">
+            Blog
+          </Link>
+
+          <Link href="/sign-in" className="hover:text-white">
+            Sign In
+          </Link>
+
+          <ThemeToggle />
+        </nav>
+
+        <div className="md:hidden">
+          <MobileNav />
+        </div>
+      </div>
+    </header>
+  );
+}
+
+
+================================================
+FILE: components/layout/MobileNav.tsx
+================================================
+"use client";
+
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
+
+export function MobileNav() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div>
+      <button
+        onClick={() => setOpen(!open)}
+        aria-label={open ? "Close navigation" : "Open navigation"}
+        className="rounded-lg border border-white/10 p-2 text-slate-300"
+      >
+        {open ? <X size={18} /> : <Menu size={18} />}
+      </button>
+
+      {open && (
+        <div className="absolute inset-x-0 top-16 border-b border-white/10 bg-[#071014] p-5 shadow-2xl">
+          <nav className="flex flex-col gap-1">
+            {[
+              ["Home", "/"],
+              ["Portfolio", "/portfolio"],
+              ["Blog", "/blog"],
+              ["Sign In", "/sign-in"]
+            ].map(([label, href]) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-3 py-3 text-sm text-slate-300 hover:bg-white/5 hover:text-white"
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="mt-4 border-t border-white/10 pt-4">
+            <ThemeToggle />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+================================================
+FILE: components/layout/SiteChrome.tsx
+================================================
+"use client";
+
+import { usePathname } from "next/navigation";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+
+export function SiteChrome({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+
+  const hideChrome =
+    pathname === "/testing" ||
+    pathname.startsWith("/testing/") ||
+    pathname === "/genelia-jamesbond-23081211" ||
+    pathname.startsWith("/genelia-jamesbond-23081211/");
+
+  if (hideChrome) {
+    return <>{children}</>;
+  }
+
+  return (
+    <>
+      <Header />
+      {children}
+      <Footer />
+    </>
+  );
+}
+
+
+================================================
+FILE: components/mdx/Callout.tsx
+================================================
+export function Callout({
+  type = "info",
+  children
+}: {
+  type?: "info" | "warning" | "danger";
+  children: React.ReactNode;
+}) {
+  const styles = {
+    info: "border-sky-400/20 bg-sky-400/5 text-sky-100",
+    warning: "border-yellow-400/20 bg-yellow-400/5 text-yellow-100",
+    danger: "border-red-400/20 bg-red-400/5 text-red-100"
+  };
+
+  return <div className={`my-6 rounded-xl border p-4 text-sm leading-6 ${styles[type]}`}>{children}</div>;
+}
+
+
+
+================================================
+FILE: components/mdx/CodeBlock.tsx
+================================================
+import { CopyButton } from "@/components/ui/CopyButton";
+
+export function CodeBlock({ children }: { children: React.ReactNode }) {
+  const value = typeof children === "string" ? children : "";
+  return (
+    <div className="relative">
+      <div className="absolute right-2 top-2 z-10">
+        <CopyButton value={value} />
+      </div>
+      {children}
+    </div>
+  );
+}
+
+
+
+================================================
+FILE: components/mdx/CommandBlock.tsx
+================================================
+export function CommandBlock({ children }: { children: React.ReactNode }) {
+  return (
+    <pre className="my-6 overflow-x-auto rounded-xl border border-white/10 bg-[#050709] p-5 font-mono text-sm text-[#9eeac6]">
+      <code>{children}</code>
+    </pre>
+  );
+}
+
+
+
+================================================
+FILE: components/mdx/HttpRequest.tsx
+================================================
+export function HttpRequest({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="my-6 overflow-x-auto rounded-xl border border-white/10 bg-[#080b0f]">
+      <div className="border-b border-white/10 px-4 py-2 font-mono text-xs text-[#38D9E6]">HTTP REQUEST</div>
+      <pre className="p-5 font-mono text-sm text-slate-300"><code>{children}</code></pre>
+    </div>
+  );
+}
+
+
+
+================================================
+FILE: components/mdx/HttpResponse.tsx
+================================================
+export function HttpResponse({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="my-6 overflow-x-auto rounded-xl border border-white/10 bg-[#080b0f]">
+      <div className="border-b border-white/10 px-4 py-2 font-mono text-xs text-sky-300">HTTP RESPONSE</div>
+      <pre className="p-5 font-mono text-sm text-slate-300"><code>{children}</code></pre>
+    </div>
+  );
+}
+
+
+
+================================================
+FILE: components/mdx/MDXComponents.tsx
+================================================
+import type { MDXComponents } from "mdx/types";
+import { Callout } from "./Callout";
+import { CommandBlock } from "./CommandBlock";
+import { HttpRequest } from "./HttpRequest";
+import { HttpResponse } from "./HttpResponse";
+
+export const mdxComponents: MDXComponents = {
+  Callout,
+  CommandBlock,
+  HttpRequest,
+  HttpResponse,
+  h1: (props) => <h1 {...props} />,
+  h2: (props) => <h2 {...props} />,
+  h3: (props) => <h3 {...props} />,
+  a: (props) => <a {...props} target={props.href?.startsWith("http") ? "_blank" : undefined} rel={props.href?.startsWith("http") ? "noreferrer" : undefined} />,
+  pre: (props) => <pre {...props} />
+};
+
+
+
+================================================
+FILE: components/ui/Badge.tsx
+================================================
+export function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex rounded-full border border-[#38D9E6]/20 bg-[#38D9E6]/5 px-2.5 py-1 text-xs text-[#9eeac6]">
+      {children}
+    </span>
+  );
+}
+
+
+
+================================================
+FILE: components/ui/CopyButton.tsx
+================================================
+ "use client";
+
+import { Check, Copy } from "lucide-react";
+import { useState } from "react";
+
+export function CopyButton({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    await navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
+
+  return (
+    <button
+      onClick={copy}
+      className="rounded-md border border-white/10 p-1.5 text-slate-500 hover:text-white"
+      aria-label="Copy code"
+    >
+      {copied ? <Check size={14} /> : <Copy size={14} />}
+    </button>
+  );
+}
+
+
+
+================================================
+FILE: components/ui/ThemeToggle.tsx
+================================================
+ "use client";
+
+import { Monitor, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
+  return (
+    <div className="flex items-center gap-1 rounded-lg border border-white/10 p-1">
+      {[
+        ["dark", Moon],
+        ["light", Sun],
+        ["system", Monitor]
+      ].map(([value, Icon]) => (
+        <button
+          key={value as string}
+          onClick={() => setTheme(value as string)}
+          aria-label={`Use ${value as string} theme`}
+          className={`rounded-md p-1.5 ${theme === value ? "bg-white/10 text-white" : "text-slate-500"}`}
+        >
+          <Icon size={14} />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+
+
+================================================
+FILE: config/categories.ts
+================================================
+export const categories = [
+  {
+    slug: "android",
+    name: "Android Tips",
+    description: "Android security research and mobile application testing.",
+    icon: "Smartphone"
+  },
+  {
+    slug: "ios",
+    name: "iOS Tips",
+    description: "iOS security research and reverse engineering.",
+    icon: "Apple"
+  },
+  {
+    slug: "web",
+    name: "Web Tips",
+    description: "Web application security research and testing.",
+    icon: "Globe"
+  },
+  {
+    slug: "reverse-engineering",
+    name: "Reverse Engineering",
+    description: "Instrumentation, binary analysis and runtime research.",
+    icon: "Binary"
+  },
+  {
+    slug: "cloud",
+    name: "Cloud Security",
+    description: "Cloud infrastructure and identity security research.",
+    icon: "Cloud"
+  },
+  {
+    slug: "api",
+    name: "API Security",
+    description: "API testing, authorization and business logic research.",
+    icon: "Webhook"
+  },
+  {
+    slug: "ai-security",
+    name: "AI Security",
+    description: "LLM security, prompt injection and AI application research.",
+    icon: "Bot"
+  },
+  {
+    slug: "network",
+    name: "Network Security",
+    description: "Network reconnaissance and application-layer research.",
+    icon: "Network"
+  },
+  {
+    slug: "devsecops",
+    name: "DevSecOps",
+    description: "SAST, secrets, containers and secure delivery pipelines.",
+    icon: "GitBranch"
+  }
+] as const;
+
+
+
+================================================
+FILE: config/site.ts
+================================================
+export const siteConfig = {
+  name: "smartsunil.in",
+  title: "Smart Sunil",
+  description:
+    "Security research, technical experiments, application security, reverse engineering and security engineering.",
+  url: "https://smartsunil.in",
+  links: {
+    github: "https://github.com/moolakarapasanga",
+    linkedin: "https://www.linkedin.com/in/smartsunil/",
+    x: "https://x.com/moolakarapaian"
+  }
+} as const;
+
+
+
+================================================
+FILE: content/posts/ai-security/understanding-prompt-injection.mdx
+================================================
+---
+title: "Understanding Prompt Injection"
+description: "A security-oriented introduction to prompt injection in LLM applications."
+date: "2026-08-17"
+category: "ai-security"
+tags:
+  - AI Security
+  - LLM
+  - Prompt Injection
+author: "Security Research"
+published: true
+---
+
+# Understanding Prompt Injection
+
+Prompt injection occurs when untrusted input influences an LLM in ways that conflict with the application's intended instructions or security boundaries.
+
+<Callout type="warning">
+AI security testing should be performed only against systems you are authorized to assess.
+</Callout>
+
+## Threat Model
+
+Separate trusted instructions, user-controlled content, retrieved data and tool outputs.
+
+## Testing
+
+Focus on whether untrusted content can alter model behavior, expose protected context, or cause unsafe tool use.
+
+## Mitigation
+
+Use strong application-level authorization, tool permission boundaries, input provenance, output validation and least privilege. Do not assume that a system prompt is an access-control boundary.
+
+## Conclusion
+
+LLM security is application security with an unreliable natural-language component in the middle. Treat model output as untrusted data.
+
+
+
+================================================
+FILE: content/posts/android/android-ssl-pinning.mdx
+================================================
+---
+title: "What is SSL Pinning ?"
+description: "A practical introduction to analyzing certificate pinning in Android applications."
+date: "2026-01-05"
+category: "android"
+tags:
+  - Android
+  - SSL Pinning
+  - Mobile Security
+author: "Security Research"
+featured: true
+published: true
+---
+
+## What is SSL & TLS?
+
+SSL = Secure Sockets Layer.
+TLS = Transport Layer Security.
+
+SSL was the original protocol used to secure network communication between a client and server.
+TLS is the modern protocol used to secure communications.
+
+## What is SSL/TLS certificate pinning?
+
+Normal TLS says "I trust certificates that chain to an acceptable trusted CA."
+Certificate pinning adds another restriction: "For this particular server, I expect this specific certificate or public key."
+
+```bash
+Normal validation
+
+api.example.com
+      ↓
+Certificate
+      ↓
+Trusted CA
+      ↓
+VALID
+```
+Pinning adds:
+```bash
+Certificate
+     ↓
+Trusted CA
+     +
+Expected public key/certificate
+     ↓
+VALID
+```
+
+## Why was certificate pinning introduced?
+
+Consider a normal CA ecosystem.
+Your device may trust hundreds of certificate authorities.
+
+```bash
+Android trust store
+
+CA 1
+CA 2
+CA 3
+CA 4
+CA 5
+...
+CA N
+```
+Suppose the legitimate server has:
+
+```bash
+api.example.com
+      ↓
+Certificate
+      ↓
+CA X
+```
+If another trusted CA can issue a certificate for: api.example.com, then ordinary CA validation could potentially accept it.
+
+Pinning says: 
+
+```bash
+I don't merely trust "any valid certificate."
+I expect THIS certificate/public key.
+```
+
+## SSL Pinning Implementation:
+
+Android framework/config ( network configure xml file ) 
+Java/Kotlin custom ( application code java level )
+HTTP library ( Okhttp or similar )
+Native ( .so libraries ) 
+Hybrid ( Java + JNI + Native ) 
+
+## How would your assessment identify Java pinning?
+
+During static analysis, you would look for things such as:
+```bash
+CertificatePinner
+TrustManager
+X509TrustManager
+checkServerTrusted
+SSLContext
+SSLSocketFactory
+KeyStore
+CertificateFactory
+HostnameVerifier
+```
+And for custom logic:
+```bash
+MessageDigest
+SHA-256
+X509Certificate
+getPublicKey()
+checkServerTrusted()
+```
+The presence of:
+```bash
+getPublicKey() combined with: SHA-256 and a hardcoded value is particularly interesting.
+```
+Conceptually:
+```bash
+getPublicKey()
+      ↓
+MessageDigest SHA-256
+      ↓
+compare against hardcoded value
+```
+That strongly suggests public-key pinning logic.
+
+## Native-level SSL pinning
+
+An Android application doesn't have to perform TLS entirely in Java/Kotlin. 
+It can use: Java/Kotlin -> JNI -> Native C/C++ -> TLS library -> Socket
+The native library might use a TLS implementation such as:
+```bash
+BoringSSL
+OpenSSL
+mbedTLS
+custom TLS implementation
+The exact implementation depends on the application.
+```
+## Native pinning architecture
+
+```bash
+Android application
+        |
+        ↓
+       JNI
+        |
+        ↓
+   libnative.so
+        |
+        +---- TLS initialization
+        |
+        +---- certificate loading
+        |
+        +---- verification callback
+        |
+        +---- pin comparison
+        |
+        ↓
+    TLS library
+        |
+        ↓
+     socket
+```
+The pinning logic could therefore be completely absent from Java.
+You might search the APK's: for native libraries.
+lib/arm64-v8a/
+lib/armeabi-v7a/
+lib/x86_64/
+
+## Native certificate verification , conceptually
+```bash
+certificate = get_peer_certificate();
+
+public_key = extract_public_key(certificate);
+
+hash = sha256(public_key);
+
+if (memcmp(hash, expected_pin, 32) != 0) {
+    return VERIFY_FAILED;
+}
+
+return VERIFY_SUCCESS;
+```
+The actual implementation might be heavily optimized, obfuscated, split between several functions, or delegated to a TLS library callback.
+
+
+
+================================================
+FILE: content/posts/android/flutter-app-ssl-pinning-bypass.mdx
+================================================
+---
+
+title: "Flutter App SSL Pinning Bypass Using ReFlutter"
+description: "A simple workflow to extract, merge, patch, sign, and install a Flutter APK for security testing."
+date: "2026-05-18"
+category: "android"
+tags:
+    - Android
+    - Flutter
+    - SSL Pinning
+    - ReFlutter
+    - APK
+    - Mobile Security
+author: "Security Research"
+featured: false
+published: true
+
+---
+
+## Flutter App Bypass
+
+This is the workflow I used to bypass SSL pinning in a Flutter application during Android security testing.
+
+## 1. Get the APK from the Device
+
+First, identify the package name:
+
+```bash
+adb shell pm list packages | findstr <package_name>
+```
+
+Check the APK path:
+
+```bash
+adb shell pm path <package_name>
+```
+
+If the application uses split APKs, pull all the APK files from the device.
+
+```bash
+adb pull <apk_path>
+```
+
+Repeat this for each APK path returned by `pm path`.
+
+## 2. Merge Split APKs
+
+Place all the APK files in the same directory and merge them using APKEditor:
+
+```bash
+java -jar APKEditor.jar m -i apk_files
+```
+
+This generates a merged APK that can be processed further.
+
+## 3. Patch the Flutter APK Using ReFlutter
+
+Run ReFlutter against the merged APK:
+
+```bash
+reflutter merged.apk
+```
+
+The patched APK will be generated in the ReFlutter output directory.
+
+## 4. Sign the APK
+
+Sign the patched APK using Uber APK Signer:
+
+```bash
+java -jar uber-apk-signer.jar --apks _flutter_output_REdebug.apk
+```
+
+Use the signed APK generated by Uber APK Signer for installation.
+
+## 5. Install the Modified APK
+
+Install the signed APK on the Android device:
+
+```bash
+adb install <signed_apk>.apk
+```
+
+After installation, configure the device to route traffic through your interception proxy and test the application traffic.
+
+
+
+================================================
+FILE: content/posts/android/iptables.mdx
+================================================
+---
+title: "Android Proxy Settings with iptables"
+description: "A simple technique to redirect Android HTTPS traffic to Burp Suite when the application ignores proxy settings."
+date: "2026-04-20"
+category: "android"
+tags:
+  - Android
+  - SSL Pinning
+  - iptables
+  - Mobile Security
+author: "Security Research"
+featured: true
+published: true
+---
+
+<Callout type="warning">
+Only perform security testing against applications and systems you are authorized to assess.
+</Callout>
+
+## Introduction
+
+During an Android security assessment, I encountered an application that was ignoring traditional interception methods such as:
+
+System proxy , Wi-Fi proxy configuration , VPN-based interception
+
+The application was using direct sockets and native/custom networking, so the traffic never reached Burp Suite.
+
+## Using iptables
+
+To force the traffic through Burp Suite, I used iptables at the kernel networking layer:
+
+```bash
+iptables -t nat -A OUTPUT \ 
+-p tcp \ --dport 443 \ 
+-j DNAT \ 
+--to-destination <BURP_IP>:8080
+```
+
+This redirects outgoing TCP traffic targeting port 443 to the Burp Suite listener.
+
+<Callout type="warning"> Only use traffic redirection and interception on applications and devices you are authorized to test. </Callout>
+
+## Important Note
+
+This technique handles traffic redirection, not TLS validation.
+
+This is technique only supported rooted device
+
+If the application uses certificate pinning, you may still need to handle pinning separately before HTTPS traffic can be inspected.
+
+Also keep in mind that this rule targets TCP/443. Applications using QUIC/HTTP3 or other protocols may require a different approach.
+
+## Quick Reference
+
+Useful when an Android application bypasses the normal proxy configuration and communicates directly with its backend.
+
+
+================================================
+FILE: content/posts/android/sim-card-detection-interception.mdx
+================================================
+---
+title: "HTTP Toolkit to Solve the Simcard required application proxy"
+description: "A simple technique to intercept Android application traffic when the app works only over mobile data and ignores traditional proxy settings."
+date: "2026-08-23"
+category: "android"
+tags:
+  - Android
+  - HTTP Toolkit
+  - ADB
+  - Mobile Security
+author: "Security Research"
+featured: true
+published: true
+---
+
+<Callout type="warning">
+Only perform security testing against applications and devices you are authorized to assess.
+</Callout>
+
+## Introduction
+
+During a recent Android security assessment, I encountered an interesting networking challenge.
+
+The application:
+
+- Required a valid SIM card.
+- Worked only over mobile data.
+- Refused to communicate over Wi-Fi.
+- Did not send any traffic to Burp Suite, even with a manual proxy configured.
+
+I tried several approaches:
+
+- USB tethering
+- Hotspot sharing
+- `adb reverse`
+- `iptables`
+- VPN interception
+- Packet capture apps
+- Router-based MITM
+
+None of them worked.
+
+## Using HTTP Toolkit Over ADB
+
+After trying multiple approaches, I came across **HTTP Toolkit's Android over ADB** feature.
+
+The setup was simple:
+
+1. Insert a valid SIM card and enable mobile data.
+2. Connect the Android device to the PC using ADB.
+3. Open HTTP Toolkit.
+4. Pair the device using the QR code provided by HTTP Toolkit.
+5. Launch the application.
+6. Start capturing the application's traffic.
+
+The application continued using its mobile data connection while HTTP Toolkit intercepted the traffic through the ADB connection.
+
+## Result
+
+This worked for the application and allowed me to capture its HTTP/HTTPS requests without relying on Wi-Fi proxy configuration.
+
+
+================================================
+FILE: content/posts/android/splita-apk-installation.mdx
+================================================
+---
+title: "Extract and Install Split APK from Android Device"
+description: "A simple guide to extracting split APK files from an Android device and reinstalling them using ADB."
+date: "2026-02-15"
+category: "android"
+tags:
+  - Android
+  - ADB
+  - Split APK
+  - Mobile Security
+author: "Security Research"
+featured: true
+published: true
+---
+
+# Extract and Install Split APK from Android Device
+
+If an Android application is installed as a **split APK**, you can extract all APK files from the device and reinstall them using `adb install-multiple`.
+
+## 1. Find the Package Name
+
+```bash
+adb shell pm list packages | findstr <package_name>
+```
+
+Example:
+
+```bash
+adb shell pm list packages | findstr jetblue
+```
+
+## 2. Get APK Paths
+
+```bash
+adb shell pm path <package_name>
+```
+
+This returns the paths of the base APK and all split APKs.
+
+```text
+package:/data/app/.../base.apk
+package:/data/app/.../split_config.arm64_v8a.apk
+package:/data/app/.../split_config.en.apk
+package:/data/app/.../split_config.xxhdpi.apk
+```
+
+## 3. Download All APK Files
+
+Pull each APK using the paths returned above:
+
+```bash
+adb pull /data/app/.../base.apk
+adb pull /data/app/.../split_config.arm64_v8a.apk
+adb pull /data/app/.../split_config.en.apk
+adb pull /data/app/.../split_config.xxhdpi.apk
+```
+
+Make sure to download **all** the APK files.
+
+## 4. Install the Split APKs
+
+Install all the APKs together:
+
+```bash
+adb install-multiple base.apk split_config.arm64_v8a.apk split_en.apk etc..
+```
+
+The exact split files depend on the application and device architecture.
+
+## Frida Process Identification
+
+To find the application's process ID:
+
+```bash
+adb shell ps | findstr <package_name>
+```
+
+Example:
+
+```bash
+adb shell ps | findstr io.example.fridatarget
+```
+
+Then attach Frida to the process:
+
+```bash
+frida -U -p <PID>
+```
+
+Example:
+
+```bash
+frida -U -p 2070
+```
+
+
+
+================================================
+FILE: content/posts/api/practical-api-authorization-testing.mdx
+================================================
+---
+title: "Practical API Authorization Testing"
+description: "A structured approach to testing object and function authorization in APIs."
+date: "2026-08-18"
+category: "api"
+tags:
+  - API Security
+  - Authorization
+  - IDOR
+author: "Security Research"
+published: true
+---
+
+# Practical API Authorization Testing
+
+Authorization testing asks whether the server correctly enforces who can access an object or perform an action.
+
+## Object-Level Authorization
+
+Create a test matrix covering multiple authenticated identities and object identifiers.
+
+## Function-Level Authorization
+
+Test whether privileged endpoints enforce the expected server-side role checks.
+
+<HttpResponse>
+HTTP/1.1 403 Forbidden
+Content-Type: application/json
+</HttpResponse>
+
+## Mitigation
+
+Authorization decisions should be enforced server-side for every sensitive operation. Client-side hiding is not authorization.
+
+## Conclusion
+
+A good authorization test is systematic, identity-aware and focused on server-side decisions.
+
+
+
+================================================
+FILE: content/posts/cloud/aws-s3-security.mdx
+================================================
+---
+title: "AWS S3 Security Misconfigurations"
+description: "A practical framework for reviewing S3 access controls and exposure."
+date: "2026-08-16"
+category: "cloud"
+tags:
+  - AWS
+  - S3
+  - Cloud Security
+author: "Security Research"
+published: true
+---
+
+# AWS S3 Security Misconfigurations
+
+S3 security reviews should focus on effective permissions rather than one isolated configuration field.
+
+## Review Areas
+
+Check bucket policies, identity policies, public access settings, object ownership and logging.
+
+<CommandBlock>
+aws s3api get-public-access-block --bucket example-bucket
+</CommandBlock>
+
+## Mitigation
+
+Use least privilege, block unintended public access, continuously monitor policy changes and separate data access from administrative permissions.
+
+## Conclusion
+
+Cloud security failures often come from the interaction of several individually reasonable settings.
+
+
+
+================================================
+FILE: content/posts/devsecops/sast-pipeline.mdx
+================================================
+---
+title: "Building a Practical SAST Pipeline"
+description: "How to structure static analysis in a development pipeline."
+date: "2026-08-14"
+category: "devsecops"
+tags:
+  - SAST
+  - DevSecOps
+  - CI/CD
+author: "Security Research"
+published: true
+---
+
+# Building a Practical SAST Pipeline
+
+A useful SAST pipeline should provide actionable feedback without making developers ignore every alert.
+
+## Pipeline
+
+A practical flow is:
+
+```text
+Pull Request
+    ↓
+SAST
+    ↓
+Secret Scan
+    ↓
+Dependency Scan
+    ↓
+Triage
+    ↓
+Developer Feedback
+```
+
+## Triage
+
+Prioritize findings using exploitability, reachability, confidence and business impact.
+
+## Conclusion
+
+Security automation is valuable only when teams can understand and act on its results.
+
+
+
+================================================
+FILE: content/posts/ios/get-the-ipa-from-the-sources.mdx
+================================================
+---
+title: "Get the IPA file"
+description: "Get the IPA file from different resources"
+date: "2026-06-21"
+category: "ios"
+tags:
+  - iOS
+  - IPA
+  - Mobile Security
+author: "Security Research"
+published: true
+---
+
+## 1. TestFlight App
+
+TestFlight apps are encrypted + sandboxed
+
+# Method - 1
+Dump IPA from installed app 
+	Steps:
+		1. Install app via TestFlight
+		2. Open jailbreak package manager (Sileo/Zebra)
+		3. Install - frida , frida-ios-dump OR bfdecrypt OR CrackerXI+
+		4. git clone https://github.com/AloneMonkey/frida-ios-dump 
+		5. python dump.py BundleID
+		
+Now we will get "decrypted IPA" 
+
+	
+# Method - 2 
+1. bfdecrypt (on-device)
+2. Install bfdecrypt tweak
+3. Launch app once and go to "/var/mobile/Containers/Data/Application/" or "/var/mobile/Documents/CrackerXI/"
+4. IPA will be dumped automatically. 
+
+## 2. App Store App
+Method - 1
+1. Install from App Store
+2. Sse decrypt.day 
+3. Use frida-ios-dump , bfdecrypt , CrackerXI+
+4. You’ll get decrypted IPA 
+
+App Store apps are: Encrypted with FairPlay DRM , decrypted only in memory 
+
+## 3. Diawi Link
+# Method - 1 
+1.Direct IPA link exposed
+2. Open - https://webapp.diawi.com/install
+3. Then:
+	Open link in browser (Chrome) 
+	Press F12 → Network tab
+	Look for: .ipa , plist 
+	will see something like - https://.../app.ipa
+	
+# Method - 2 
+Diawi uses:  itms-services://?action=download-manifest&url=manifest.plist
+Steps:  Copy the manifest URL , Open it in browser
+Inside you’ll see: 
+```bash
+    <key>url</key>
+    <string>https://.../yourapp.ipa</string>
+```
+Copy IPA link and download.
+
+
+Direct IPA from Diawi → often still encrypted
+For pentesting → decrypted IPA is what you need
+Use:
+ Frida (dynamic)
+ Ghidra / IDA (static after dump)
+ 
+## 4. Decrypt Day 
+ 
+ Use this website -> https://decrypt.day/home
+ For get the IPA files.
+
+<Callout type="warning">
+Use these techniques only in applications you are authorized to test.
+</Callout>
+ 
+## 5. For MAC Book 
+ 
+ Xcode → Devices & Simulators → Download container - Only gives sandbox data, NOT IPA
+
+## Install the IPA file 
+
+1. xcode [ only mac ] 
+2. cydia impactor [ it's now working with apple id] 
+3. site loading 
+4. itunes with zebra 
+5. 3uTools 
+6. iMazing software for windows 
+7. 3uTools for install IPA files 
+8. Atlstore for install IPA file with Apple ID 
+
+
+================================================
+FILE: content/posts/ios/ssl-kill-switch-2.mdx
+================================================
+---
+title: "SSL Kill Switch 2"
+description: "Bypass SSL Pinning iOS Applications"
+date: "2026-06-21"
+category: "ios"
+tags:
+  - iOS
+  - TLS
+  - Mobile Security
+author: "Security Research"
+published: true
+---
+
+## Basic setup
+
+On a jailbroken test device:
+```bash
+iPhone
+  |
+  +-- Jailbreak
+  |
+  +-- Cydia/Sileo/Zebra
+  |
+  +-- SSL Kill Switch 2
+  |
+  +-- Burp CA certificate
+  |
+  +-- Wi-Fi proxy
+  |
+  +-- Burp Suite
+  ```
+## Configure Burp
+
+  Configure Burp -> Proxy -> Proxy Settings -> Proxy listener -> 0.0.0.0:8080
+  Make sure your PC and iPhone can commnunicate
+  Find you PC's LAN IP 
+  ipconfig 
+  find the ip address like this: 192.168.1.10
+
+## Configure iPhone proxy 
+  On the iPhone -> Settings -> Wi-FI -> Your Wifi network -> Configure Proxy -> Manual
+  Set:
+  Server : 192.168.1.10
+  Port: 8080
+
+##  Install Burp CA 
+  Go to the browser in the iPhone 
+  Hit the http://burp Download the CA certificate 
+
+  Settings -> General -> VPN & Device Management 
+  After installing it, there is an additional important step:
+  Settings -> General -> About -> Certificate Trust Settings -> Enable full trust for the Burp CA 
+
+## Install SSL Kill Switch 2
+Install the compatible package for your jailbroken iOS environment.
+After installation, reboot/respring if required.
+Then launch the target application.
+If the application uses networking APIs covered by the tweak:
+App -> TLS validation -> SSL Kill Switch -> validation bypass -> Burp
+Now, You should start seeing HTTPS requests in Burp.
+
+
+You should start seeing HTTPS requests in Burp.
+
+<Callout type="warning">
+Use these techniques only in applications you are authorized to test.
+</Callout>
+
+## Use Super Proxy 
+
+Try using this VPN app and configure it on the iPhone. It might work.
+
+## Why SSL Kill Switch doesn't bypass everything ?
+If an application still doesn't appear in Burp after SSL Kill Switch is installed, don't immediately conclude that your proxy configuration is broken.
+The application might be using:
+```bash
+NSURLSession
+CFNetwork
+SecureTransport
+```
+which may be covered,
+but it could instead use:
+```bash
+BoringSSL
+OpenSSL
+custom TLS implementation
+Network.framework
+native C/C++
+custom certificate validation
+certificate/public-key pinning
+```
+For example:
+```bash
+Swift/Objective-C
+       |
+       v
+Custom networking library
+       |
+       v
+BoringSSL
+       |
+       v
+TLS
+```
+SSL Kill Switch may not intercept the application's particular validation path.
+
+
+================================================
+FILE: content/posts/ios/static-analysis.mdx
+================================================
+---
+title: "Static Analysis IPA file"
+description: "Static Analysis IPA file using strings,"
+date: "2026-07-21"
+category: "ios"
+tags:
+  - iOS
+  - TLS
+  - Mobile Security
+author: "Security Research"
+published: true
+---
+
+## Hardcoded Credentials
+
+Search the extracted application files for hardcoded credentials, API keys, tokens, secrets, passwords, private keys, and third-party service credentials.
+
+### 1. Credentials and API Keys
+
+```bash
+rg -n -i "api[_-]?key|secret|password|passwd|pwd|token|session|auth|\
+credential|Bearer|client[_-]?id|client[_-]?secret|access[_-]?key|\
+private[_-]?key|public[_-]?key" exploded
+```
+
+Also inspect configuration files such as:
+
+```text
+.json
+.xml
+.plist
+.properties
+.yaml
+.yml
+.env
+.config
+```
+
+Pay particular attention to third-party backend integrations and embedded service credentials.
+
+### 2. Third-Party Service Configuration
+
+Search for references to commonly used cloud and backend services:
+
+```bash
+rg -n -i "firebase|google|aws|s3|azure|gcp|stripe|twilio|algolia|sentry|\
+amplitude|mixpanel" exploded
+```
+
+For iOS applications, inspect files such as:
+
+```text
+GoogleService-Info.plist
+Info.plist
+*.plist
+```
+
+These files may contain API keys, project identifiers, OAuth configuration, Firebase configuration, or other service-related information.
+
+### 3. Hidden and Debug Features
+
+Search the application binary and extracted resources for development and testing functionality:
+
+```bash
+rg -n -i "develop|developer|debug|dev[_-]?mode|test[_-]?mode|staging|\
+sandbox|fake|mock|test|internal|qa|bypass" exploded
+```
+
+Look for:
+
+```text
+Hidden debug menus
+Developer options
+Test accounts
+Staging endpoints
+Debug APIs
+Internal features
+Mock authentication
+Feature flags
+Development backdoors
+```
+
+### 4. Encryption and Decryption Logic
+
+Search for cryptographic implementations and key-handling code:
+
+```bash
+rg -n -i "AES|DES|RSA|ECIES|ChaCha|Poly1305|Blowfish|RC4|Twofish|Hmac|\
+HMAC|Cipher|getInstance|SecretKeySpec|IvParameterSpec|PBKDF2|PBEWith|\
+SecureRandom|KeyPairGenerator|KeyGenerator|KeyFactory|MessageDigest|\
+Signature|SecretKeyFactory|Mac|GCMParameterSpec|CBC|CTR|CFB|OFB|\
+NoPadding|PKCS8|X509EncodedKeySpec|KeySpec|EncodedKeySpec" exploded
+```
+
+When encryption is identified, trace:
+
+```text
+Encryption algorithm
+Encryption key
+Initialization Vector (IV)
+Salt
+Nonce
+Key derivation method
+Encryption/decryption functions
+Where the key is stored
+Where the encrypted data is stored
+```
+
+### 5. Encrypted Blobs and Decryptors
+
+Search for encrypted or encoded data together with the code responsible for decoding or decrypting it:
+
+```bash
+rg -n -i "encrypt|decrypt|decode|encode|Base64|decodeBase64|encodeToString|\
+hexString|hexToBytes|b64decode" exploded
+```
+
+If an encrypted blob is identified, locate its corresponding decryptor and determine whether the encryption key or derivation logic is also present in the application.
+
+### 6. Custom Encryption and Obfuscation
+
+Look for developers implementing their own crypto or simple obfuscation:
+
+```bash
+rg -n -i "XOR|xor|customEncrypt|customDecrypt|rot13|reverse|obfuscate|\
+deobf|shift|mask|charAt|toCharArray|StringBuilder|append|decodeBytes|\
+byteToHex|hexToBytes" exploded
+```
+
+Pay attention to:
+
+```text
+XOR-based encryption
+Hardcoded encryption keys
+Hardcoded IVs
+String manipulation
+Base64 encoding
+Hex encoding
+Character shifting
+Reversed strings
+Custom key derivation
+```
+
+### 7. TLS and Trust Configuration
+
+Search for insecure certificate and trust-management implementations:
+
+```bash
+rg -n -i "trustAll|allowAll|HostnameVerifier|verify|checkServerTrusted|\
+setDefaultHostnameVerifier|SSLSocket|SSLContext|InsecureTrustManager|\
+trustManager|TrustManager|TrustManagerFactory|acceptAllCertificates|\
+CertificatePinner" exploded
+```
+
+Review the surrounding implementation to determine whether certificate validation or hostname verification can be bypassed.
+
+### 8. Local Storage of Credentials
+
+Search for locations where sensitive information may be stored:
+
+```bash
+rg -n -i "SharedPreferences|MODE_PRIVATE|MODE_WORLD_READABLE|\
+MODE_WORLD_WRITEABLE|putString|putInt|putBoolean|commit|apply|\
+writeFile|FileOutputStream|openFileOutput|KeyStore|keyStore" exploded
+```
+
+Check whether the application stores:
+
+```text
+Access tokens
+Refresh tokens
+Session identifiers
+Passwords
+API keys
+Encryption keys
+User credentials
+Authentication data
+```
+
+### 9. High-Value Quick Search
+
+For an initial manual review, search for these terms:
+
+```text
+AES
+RSA
+HMAC
+api_key
+apikey
+secret
+password
+token
+Bearer
+credential
+private_key
+access_key
+trustAll
+SharedPreferences
+CertificatePinner
+X509EncodedKeySpec
+Cipher
+decrypt
+encrypt
+```
+
+### 10. Validation
+
+Finding a keyword alone is **not evidence of a vulnerability**. Trace the value to determine whether it is:
+
+```text
+Hardcoded
+Sensitive
+Actually used
+Accessible to an attacker
+Valid or active
+Privileged
+Environment-specific
+Recoverable at runtime
+```
+
+For confirmed credentials, validate them only within the authorized assessment scope.
+
+
+
+================================================
+FILE: content/posts/network/network-recon.mdx
+================================================
+---
+title: "Network Reconnaissance Methodology"
+description: "A structured approach to mapping an authorized network assessment."
+date: "2026-08-15"
+category: "network"
+tags:
+  - Network Security
+  - Reconnaissance
+  - Assessment
+author: "Security Research"
+published: true
+---
+
+# Network Reconnaissance Methodology
+
+Network reconnaissance should establish scope before collecting technical detail.
+
+## Scope
+
+Document approved ranges, systems, exclusions and testing windows.
+
+## Discovery
+
+Use controlled discovery to identify reachable hosts and exposed services.
+
+<CommandBlock>
+nmap -sV --top-ports 1000 192.0.2.0/24
+</CommandBlock>
+
+## Conclusion
+
+Good reconnaissance reduces noise and gives the rest of the assessment a defensible technical foundation.
+
+
+
+================================================
+FILE: content/posts/reverse-engineering/frida-basics.mdx
+================================================
+---
+title: "Getting Started With Frida"
+description: "An introduction to runtime instrumentation for authorized application research."
+date: "2026-08-19"
+category: "reverse-engineering"
+tags:
+  - Frida
+  - Reverse Engineering
+  - Instrumentation
+author: "Security Research"
+published: true
+---
+
+# Getting Started With Frida
+
+Frida provides runtime instrumentation capabilities that are useful during authorized application research.
+
+<Callout type="info">
+Use instrumentation only against software you own or are explicitly authorized to assess.
+</Callout>
+
+## Why Runtime Instrumentation?
+
+Static analysis tells you what code exists. Runtime instrumentation helps answer what code actually executes under specific conditions.
+
+## Workflow
+
+A typical research workflow is:
+
+1. Identify the relevant process.
+2. Understand the target function.
+3. Instrument a narrow point.
+4. Observe behavior.
+5. Validate the hypothesis.
+
+## Conclusion
+
+The value of Frida is not the hook itself. It is the ability to test assumptions about runtime behavior.
+
+
+
+================================================
+FILE: content/posts/web/http-request-smuggling.mdx
+================================================
+---
+title: "Understanding HTTP Request Smuggling"
+description: "A methodology for analyzing parser inconsistencies between HTTP components."
+date: "2026-08-20"
+category: "web"
+tags:
+  - Web Security
+  - HTTP
+  - Request Smuggling
+author: "Security Research"
+published: true
+---
+
+# Understanding HTTP Request Smuggling
+
+HTTP request smuggling can occur when front-end and back-end components disagree about request boundaries.
+
+<Callout type="danger">
+Only test request-smuggling behavior against systems where you have explicit authorization.
+</Callout>
+
+## Technical Background
+
+Common classes include CL.TE and TE.CL, where different components prioritize different message framing signals.
+
+## Methodology
+
+Map the proxy chain first. Then determine which parser handles each stage and compare how the components interpret ambiguous requests.
+
+<HttpRequest>
+POST / HTTP/1.1
+Host: example.test
+Content-Length: 4
+Transfer-Encoding: chunked
+</HttpRequest>
+
+## Mitigation
+
+Standardize HTTP parsing behavior, remove ambiguous framing, keep reverse proxies and application servers patched, and monitor for anomalous traffic patterns.
+
+## Conclusion
+
+The vulnerability is fundamentally about disagreement. Finding the disagreement is usually more important than memorizing payloads.
+
+
+
+================================================
+FILE: lib/categories.ts
+================================================
+import { categories } from "@/config/categories";
+
+export function getCategory(slug: string) {
+  return categories.find((category) => category.slug === slug);
+}
+
+
+
+================================================
+FILE: lib/mdx.ts
+================================================
+import { compileMDX } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
+import rehypePrettyCode from "rehype-pretty-code";
+import { mdxComponents } from "@/components/mdx/MDXComponents";
+
+export async function renderMDX(source: string) {
+  return compileMDX({
+    source,
+    components: mdxComponents,
+    options: {
+      parseFrontmatter: false,
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [
+          [
+            rehypePrettyCode,
+            {
+              theme: "github-dark",
+              keepBackground: false
+            }
+          ]
+        ]
+      }
+    }
+  });
+}
+
+
+
+================================================
+FILE: lib/posts.ts
+================================================
+import fs from "node:fs";
+import path from "node:path";
+import matter from "gray-matter";
+import readingTime from "reading-time";
+import type { BlogPost, PostFrontmatter } from "@/types/blog";
+
+const postsDirectory = path.join(process.cwd(), "content", "posts");
+
+function getMdxFiles(directory: string): string[] {
+  if (!fs.existsSync(directory)) return [];
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const fullPath = path.join(directory, entry.name);
+    return entry.isDirectory()
+      ? getMdxFiles(fullPath)
+      : entry.name.endsWith(".mdx")
+        ? [fullPath]
+        : [];
+  });
+}
+
+function parsePost(filePath: string): BlogPost {
+  const raw = fs.readFileSync(filePath, "utf8");
+  const { data, content } = matter(raw);
+  const frontmatter = data as PostFrontmatter;
+  const slug = path.basename(filePath, ".mdx");
+
+  return {
+    slug,
+    title: frontmatter.title,
+    description: frontmatter.description,
+    date: frontmatter.date,
+    category: frontmatter.category,
+    tags: frontmatter.tags ?? [],
+    author: frontmatter.author ?? "Security Research",
+    readingTime: readingTime(content).text,
+    featured: frontmatter.featured ?? false,
+    published: frontmatter.published ?? true,
+    content
+  };
+}
+
+export function getAllPosts(): BlogPost[] {
+  return getMdxFiles(postsDirectory)
+    .map(parsePost)
+    .filter((post) => post.published)
+    .sort((a, b) => +new Date(b.date) - +new Date(a.date));
+}
+
+export function getPostBySlug(slug: string): BlogPost | undefined {
+  return getAllPosts().find((post) => post.slug === slug);
+}
+
+export function getPostsByCategory(category: string): BlogPost[] {
+  return getAllPosts().filter((post) => post.category === category);
+}
+
+export function getFeaturedPosts(): BlogPost[] {
+  return getAllPosts().filter((post) => post.featured);
+}
+
+export function getLatestPosts(limit = 6): BlogPost[] {
+  return getAllPosts().slice(0, limit);
+}
+
+export function getRelatedPosts(post: BlogPost, limit = 3): BlogPost[] {
+  return getAllPosts()
+    .filter((candidate) => candidate.slug !== post.slug)
+    .map((candidate) => ({
+      post: candidate,
+      score:
+        (candidate.category === post.category ? 3 : 0) +
+        candidate.tags.filter((tag) => post.tags.includes(tag)).length
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(({ post: candidate }) => candidate);
+}
+
+
+
+================================================
+FILE: lib/utils.ts
+================================================
+export function cn(...inputs: Array<string | false | null | undefined>) {
+  return inputs.filter(Boolean).join(" ");
+}
+
+export function formatDate(date: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  }).format(new Date(date));
+}
+
+
+
+================================================
+FILE: types/blog.ts
+================================================
+export interface BlogPost {
+  slug: string;
+  title: string;
+  description: string;
+  date: string;
+  category: string;
+  tags: string[];
+  author: string;
+  readingTime: string;
+  featured?: boolean;
+  published: boolean;
+  content: string;
+}
+
+export interface PostFrontmatter {
+  title: string;
+  description: string;
+  date: string;
+  category: string;
+  tags?: string[];
+  author?: string;
+  featured?: boolean;
+  published?: boolean;
+}
+
+
