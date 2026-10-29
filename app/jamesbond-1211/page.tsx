@@ -119,7 +119,7 @@ export default async function ResearchPage() {
         </h1>
 
         <div className="birthday-subtitle">
-          Rithicka 💗
+          💗
         </div>
 
         <div className="heart-divider">
@@ -208,8 +208,8 @@ export default async function ResearchPage() {
     __html: `
       window.addEventListener("load", function () {
 
-        const birthdayMonth = 7;
-        const birthdayDay = 23;
+        const birthdayMonth = 11;
+        const birthdayDay = 12;
 
         function getNextBirthday() {
           const now = new Date();

@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       username === process.env.RESEARCHER_USERNAME &&
       password === process.env.RESEARCHER_PASSWORD
     ) {
-      redirectTo = "/genelia-jamesbond-23081211";
+      redirectTo = "/jamesbond-1211";
     }
 
     // Invalid credentials
