@@ -1444,7 +1444,7 @@ export default async function ResearchPage() {
         </h1>
 
         <div className="birthday-subtitle">
-          Rithicka 💗
+          💗
         </div>
 
         <div className="heart-divider">
@@ -1467,8 +1467,6 @@ export default async function ResearchPage() {
         </div>
 
         <p className="birthday-message second">
-          Sikirram intha ofc ah vitu relive agidu 
-          Next, Birthday ve Vera Office Celabrate pannuvom. 😄
         </p>
 
       </div>
